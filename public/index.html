@@ -3,20 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
+    <title>DrawBoke</title>
 
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/8.4.2/firebase-app.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/8.4.2/firebase-auth.js"></script>
-    <script defer src="/__/firebase/8.4.2/firebase-database.js"></script>
-    <script defer src="/__/firebase/8.4.2/firebase-firestore.js"></script>
-    <script defer src="/__/firebase/8.4.2/firebase-functions.js"></script>
-    <script defer src="/__/firebase/8.4.2/firebase-messaging.js"></script>
-    <script defer src="/__/firebase/8.4.2/firebase-storage.js"></script>
-    <script defer src="/__/firebase/8.4.2/firebase-analytics.js"></script>
-    <script defer src="/__/firebase/8.4.2/firebase-remote-config.js"></script>
-    <script defer src="/__/firebase/8.4.2/firebase-performance.js"></script>
     <!-- 
       initialize the SDK after all desired features are loaded, set useEmulator to false
       to avoid connecting the SDK to running emulators.
@@ -24,25 +12,17 @@
 
       <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
-
-    <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
-
     <script defer src="js/index.js"></script>
     <script>
 
-    const domGoogleLoginButton = document.querySelector("#google_login_button");
-    ReactDom.render(googleLoginButton(), domGoogleLoginButton);
-    console.log("chimpo");
     </script>
     <style media="screen">
     </style>
   </head>
   <body>
-    <h1>あなたとドロー<br>いますぐダウンロー<br>ド</h1>
+    <div id="login_screen"></div>
 
-    <button id="google_login_button"></button>
+
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         const loadEl = document.querySelector('#load');

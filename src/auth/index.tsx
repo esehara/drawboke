@@ -1,3 +1,4 @@
+import {useState, useEffect} from "react";
 import firebase from "firebase/app";
 import "firebase/auth";
 
@@ -17,7 +18,27 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const Firebase = firebase;
 
-export function GoogleLoginButton() {
+function GoogleLoginResult() {
+    const [result_message, setMessage] = useState("まだなにもしてないぜ");
+
+    useEffect(() => {
+        firebase.auth()
+        .getRedirectResult()
+        .then((result) =>  {
+            if (result.credential) {
+                setMessage("やったぜ");
+            }
+        }).catch((error) => {
+                setMessage("失敗したぜ");
+        });
+    }, []);
+
+    return (<h2>
+        {result_message}
+    </h2>)
+}
+
+function GoogleLoginButton() {
     const redirect = () => {
         const provider = new firebase.auth.GoogleAuthProvider();
         firebase.auth().signInWithRedirect(provider);
@@ -32,3 +53,12 @@ export function GoogleLoginButton() {
     )
 }
 
+export function LoginScreen() {
+    return (
+        <div>
+            <h1>あなたとドロー<br />いますぐダウンロー<br />ド</h1>
+            <GoogleLoginResult />
+            <GoogleLoginButton />
+        </div>
+    )
+}
