@@ -18,24 +18,42 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const Firebase = firebase;
 
+
 function GoogleLoginResult() {
-    const [result_message, setMessage] = useState("まだなにもしてないぜ");
+    const [has_message, setHasMessage] = useState(false);
+    const [message_text, setMessageText] = useState("まだなにもしていないぜ");
+    const [user, setUser] = useState< firebase.User | null >(null);
 
     useEffect(() => {
-        firebase.auth()
+        firebase.auth() 
         .getRedirectResult()
         .then((result) =>  {
+            /** @type {firebase.auth.OAuthCredential} */
+            const credential = result.credential;
             if (result.credential) {
-                setMessage("やったぜ");
+                // const token = result.credential?
+                console.log(result.user);
+                setUser(result.user);
+                setHasMessage(true);
+                setMessageText("やったぜ");
             }
         }).catch((error) => {
-                setMessage("失敗したぜ");
+            setHasMessage(true);
+            setMessageText("失敗したぜ");
         });
     }, []);
-
-    return (<h2>
-        {result_message}
-    </h2>)
+    return (
+        <div>
+            { has_message &&
+                <div>
+                    <h2> { message_text } </h2>
+                    { user &&
+                        <p> ようこそ、{ user.displayName } さん </p>
+                    }
+                </div>
+            }
+        </div>
+    );        
 }
 
 function GoogleLoginButton() {
