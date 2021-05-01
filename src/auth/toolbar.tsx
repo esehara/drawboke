@@ -1,6 +1,6 @@
 import firebase from "firebase/app";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 export function RedirectForSignIn() {
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -25,7 +25,7 @@ function UserToolbarButtons() {
             { login_user 
             ?   (<ul>
                     <li>{ login_user.displayName }</li>
-                    <li>絵を描く</li>
+                    <li><Link to="/draw">絵を描く</Link></li>
                     <li>絵に一言</li>
                     <li>
                         <button 

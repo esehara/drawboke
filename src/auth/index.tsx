@@ -1,7 +1,5 @@
-import {useState, useEffect} from "react";
 import firebase from "firebase/app";
 import "firebase/auth";
-import {useHistory} from 'react-router';
 import { RedirectForSignIn } from "./toolbar";
 const auth = firebase.auth();
 auth.useEmulator("http://localhost:9099");
