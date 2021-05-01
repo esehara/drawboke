@@ -24,9 +24,9 @@ function UserToolbarButtons() {
         <div>
             { login_user 
             ?   (<ul>
-                    <li>{ login_user.displayName }</li>
+                    <li><Link to="/user/esehara">{ login_user.displayName }</Link></li>
                     <li><Link to="/draw">絵を描く</Link></li>
-                    <li>絵に一言</li>
+                    <li><Link to="/boke">絵に一言</Link></li>
                     <li>
                         <button 
                             onClick={() => { UserLogout(); }} 

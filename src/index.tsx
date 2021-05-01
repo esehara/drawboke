@@ -24,9 +24,11 @@ import {
   TODO: あとでUserPageとLoginPageを同じファイルにする
   TODO: できるなら各デフェクトリのindex.tsxにコンポーネントを集めたい
 */
+
 import { LoginPage } from "./auth/index";
 import { UserPage, UserToolbar} from "./auth/toolbar";
 import { DrawingPage } from "./draw/index";
+import { BokePage } from "./boke/index";
 
 export default function RootScreen() {
     return (
@@ -37,6 +39,7 @@ export default function RootScreen() {
             <Switch>
                 <Route exact path="/"> <LoginPage /> </Route>
                 <Route exact path="/draw"><DrawingPage /> </Route>
+                <Route exact path="/boke"><BokePage /> </Route>
                 <Route path="/user/:user_id" children={ <UserPage /> } />
             </Switch>
         </Router>
