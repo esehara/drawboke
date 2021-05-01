@@ -1,12 +1,25 @@
 import {useParams} from "react-router-dom";
 
+const testBokeList = [
+    "濡れたティッシュを食べる男",
+    "自分のiPadにいやらしいケモノの絵を描かれる男"
+];
 function UserBokeForPictureList() {
     return (
         <div>
             <h1>つけた表題一覧</h1>
             <ul>
-                <li>濡れたティッシュを食べる男</li>
-                <li>自分のiPadにいやらしいケモノの絵を描かれる男</li>
+                {
+                    testBokeList.map((prop, index) => {
+                        const title = prop;
+                        return (
+                            <li key={index}>
+                                <h2>{title}</h2>
+                                <img src="/mock-love-thumbnail.png" alt=""/>
+                            </li>
+                        )
+                    })
+                }
             </ul>
         </div>
     )
@@ -17,7 +30,9 @@ function UserDrawPictureList() {
         <div>
             <h1>描いた絵一覧</h1>
             <ul>
-                <li></li>
+                <li>
+                    <img src="/mock-love-thumbnail.png" alt=""/>
+                </li>
             </ul>
         </div>
     );
@@ -28,7 +43,7 @@ export function UserPage() {
     let { user_id }  = useParams<UserPageParams>();
     return (
         <div>
-            <h1>{ user_id }</h1>
+            <h1>User: { user_id }</h1>
             <UserDrawPictureList />
             <UserBokeForPictureList />
         </div>
