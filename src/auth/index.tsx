@@ -56,7 +56,7 @@ function GoogleLoginButton() {
     )
 }
 
-export function LoginScreen() {
+export function LoginPage() {
     return (
         <div>
             <h1>あなたとドロー<br />いますぐダウンロー<br />ド</h1>

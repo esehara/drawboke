@@ -1,5 +1,6 @@
 import firebase from "firebase/app";
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 function UserLogout() { 
     firebase.auth().signOut()
@@ -12,8 +13,6 @@ function UserToolbarButtons() {
 
     useEffect(() => {
         firebase.auth().onAuthStateChanged((user) => {
-            console.log("--> UserToolbar -->");
-            console.log(user);
             setUser(user);
         });
     }, []);
@@ -35,11 +34,20 @@ function UserToolbarButtons() {
 
 }
 
-export default function UserToolbar() {
+export function UserToolbar() {
     return (
         <div>
             <h1>DrawBoke</h1>
             <UserToolbarButtons />
         </div>
     );
+}
+type UserPageParams = { user_id: string};
+export function UserPage() {
+    let { user_id }  = useParams<UserPageParams>();
+    return (
+        <div>
+            <h1>{ user_id }</h1>
+        </div>
+    )
 }

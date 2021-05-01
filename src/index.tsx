@@ -20,8 +20,8 @@ import {
     Route,
     Link
 } from "react-router-dom";
-import { LoginScreen } from "./auth/index";
-import UserToolbar from "./auth/toolbar";
+import { LoginPage } from "./auth/index";
+import {UserPage, UserToolbar} from "./auth/toolbar";
 
 export default function RootScreen() {
     return (
@@ -30,9 +30,8 @@ export default function RootScreen() {
                    <UserToolbar />
             </div>
             <Switch>
-                <Route exact path="/">
-                    <LoginScreen />
-                </Route>
+                <Route exact path="/"> <LoginPage /> </Route>
+                <Route path="/user/:user_id" children={ <UserPage /> } />
             </Switch>
         </Router>
     );
