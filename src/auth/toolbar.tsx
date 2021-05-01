@@ -2,10 +2,13 @@ import firebase from "firebase/app";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
+export function RedirectForSignIn() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithRedirect(provider);
+}  
+
 function UserLogout() { 
-    firebase.auth().signOut()
-        .then(() => { history.go(0); })
-        .catch(console.error);
+    firebase.auth().signOut();
 }
 
 function UserToolbarButtons() {
@@ -22,12 +25,22 @@ function UserToolbarButtons() {
             { login_user 
             ?   (<ul>
                     <li>{ login_user.displayName }</li>
+                    <li>絵を描く</li>
+                    <li>絵に一言</li>
                     <li>
                         <button 
                             onClick={() => { UserLogout(); }} 
                         > Log out </button></li>
                 </ul>)
-            : <ul><li>Sign In</li></ul>
+
+            :   (<ul>
+                    <li>
+                        <button
+                            onClick={() => { RedirectForSignIn(); }}
+                        > PLAY </button>
+                        </li>
+                </ul>)
+            
             }
         </div>
     )
@@ -42,6 +55,7 @@ export function UserToolbar() {
         </div>
     );
 }
+
 type UserPageParams = { user_id: string};
 export function UserPage() {
     let { user_id }  = useParams<UserPageParams>();
