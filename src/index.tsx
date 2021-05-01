@@ -26,9 +26,10 @@ import {
 */
 
 import { LoginPage } from "./auth/index";
-import { UserPage, UserToolbar} from "./auth/toolbar";
+import { UserToolbar} from "./auth/toolbar";
 import { DrawingPage } from "./draw/index";
 import { BokePage } from "./boke/index";
+import { UserPage } from "./user/index"
 
 export default function RootScreen() {
     return (

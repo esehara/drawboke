@@ -56,12 +56,3 @@ export function UserToolbar() {
     );
 }
 
-type UserPageParams = { user_id: string};
-export function UserPage() {
-    let { user_id }  = useParams<UserPageParams>();
-    return (
-        <div>
-            <h1>{ user_id }</h1>
-        </div>
-    )
-}
