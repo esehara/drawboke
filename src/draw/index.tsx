@@ -1,5 +1,5 @@
 import { fabric } from "fabric";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 function YouAreArtistCanvas() {
     const TargetCanvasId = "awesome_drawing";
@@ -18,9 +18,31 @@ function YouAreArtistCanvas() {
     )
 }
 
+
+function SetRandomLabel() {
+}
+
 function TitleForDrawerLabel() {
+    const [title, setTitle] = useState("友達がいるのによからぬことをする男");
+
+    function CreateNewLabel()  {
+        setTitle("（この絵にお題はありません）");
+    }
+
+    function SetRandomLabel() {
+        setTitle("違うお題がゲットされるっぽい");
+    }
+
     return (
-        <h1>お題: 友達がいるのによからぬことをする男</h1>
+        <div>
+            <h1>お題: {title} </h1>
+            <button
+                onClick={() => CreateNewLabel()}
+            >新規</button>
+            <button
+                onClick={() => SetRandomLabel()}
+            >変更</button>
+        </div>
     )
 }
 

@@ -29,7 +29,8 @@ import { LoginPage } from "./auth/index";
 import { UserToolbar} from "./auth/toolbar";
 import { DrawingPage } from "./draw/index";
 import { BokePage } from "./boke/index";
-import { UserPage } from "./user/index"
+import { UserPage } from "./user/index";
+import { ShowDrawingPage, ShowCaptionPage} from "./show/index";
 
 export default function RootScreen() {
     return (
@@ -39,9 +40,11 @@ export default function RootScreen() {
             </div>
             <Switch>
                 <Route exact path="/"> <LoginPage /> </Route>
-                <Route exact path="/draw"><DrawingPage /> </Route>
-                <Route exact path="/boke"><BokePage /> </Route>
-                <Route path="/user/:user_id" children={ <UserPage /> } />
+                <Route path="/draw/:id"><DrawingPage /> </Route>
+                <Route path="/boke/:id"><BokePage /> </Route>
+                <Route path="/show/draw/:id"><ShowDrawingPage /></Route>
+                <Route path="/show/boke/:id"><ShowCaptionPage /></Route>
+                <Route path="/user/:id" children={ <UserPage /> } />
             </Switch>
         </Router>
     );

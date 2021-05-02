@@ -1,9 +1,13 @@
-import {useParams} from "react-router-dom";
+import {
+    Link,
+    useParams
+} from "react-router-dom";
 
 const testBokeList = [
     "濡れたティッシュを食べる男",
-    "自分のiPadにいやらしいケモノの絵を描かれる男"
+    "自分のiPadにいやらしいケモノの絵を描かれる男",
 ];
+
 function UserBokeForPictureList() {
     return (
         <div>
@@ -12,10 +16,12 @@ function UserBokeForPictureList() {
                 {
                     testBokeList.map((prop, index) => {
                         const title = prop;
+                        const boke_id = index.toString(); 
                         return (
-                            <li key={index}>
-                                <h2>{title}</h2>
-                                <img src="/mock-love-thumbnail.png" alt=""/>
+                            <li key={boke_id}>
+                                <Link to={"/show/boke/" + boke_id}>
+                                    <h3>{title}</h3>
+                                </Link>
                             </li>
                         )
                     })
@@ -24,15 +30,29 @@ function UserBokeForPictureList() {
         </div>
     )
 }
+const testDrawingList = [
+    "mock-love-thumbnail.png",
+    "mock-love-thumbnail.png",
+];
 
-function UserDrawPictureList() {
+function UserDrawingList() {
     return (
         <div>
             <h1>描いた絵一覧</h1>
             <ul>
-                <li>
-                    <img src="/mock-love-thumbnail.png" alt=""/>
-                </li>
+                {testDrawingList.map(
+                    (prop, index) => {
+                        const draw_path = prop;
+                        const draw_id = index.toString();
+                        return (
+                            <li key={index}>
+                                <Link to={"/show/draw/" + draw_id}>
+                                    <img src={"/" + draw_path } />
+                                </Link>        
+                            </li>
+                        )
+                    }    
+                )}
             </ul>
         </div>
     );
@@ -44,7 +64,7 @@ export function UserPage() {
     return (
         <div>
             <h1>User: { user_id }</h1>
-            <UserDrawPictureList />
+            <UserDrawingList />
             <UserBokeForPictureList />
         </div>
     );
