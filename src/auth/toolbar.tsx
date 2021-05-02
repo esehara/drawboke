@@ -1,6 +1,6 @@
 import firebase from "firebase/app";
-import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
+import { checkLoginUser } from "../auth";
 
 export function RedirectForSignIn() {
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -12,14 +12,7 @@ function UserLogout() {
 }
 
 function UserToolbarButtons() {
-    const [login_user, setUser] = useState< firebase.User | null >(null);
-
-    useEffect(() => {
-        firebase.auth().onAuthStateChanged((user) => {
-            setUser(user);
-        });
-    }, []);
-
+    const login_user = checkLoginUser();
     return(
         <div>
             { login_user 

@@ -1,3 +1,4 @@
+import { checkLoginUser } from "../auth";
 import {
     Link,
     useParams
@@ -5,12 +6,16 @@ import {
 
 type ShowDrawingPageParam = { id: string };
 export function ShowDrawingPage() {
+    const login_user = checkLoginUser();
     let { id } = useParams<ShowDrawingPageParam>();
 
     return (
         <div>
             <h1>id: {id}</h1>
             <img src="/mock-love-thumbnail.png" alt=""/>
+            { login_user && 
+                <p><Link to="/boke/:id">題を書く</Link></p>
+            }
             <ul>
                 <li><Link to="/show/boke/1"><h3>ティッシュを間違えて食べそうな顔</h3></Link></li>
                 <li><Link to="/show/boke/2"><h3>背が高そう</h3></Link></li>
@@ -21,11 +26,15 @@ export function ShowDrawingPage() {
 
 type ShowCaptionPageParam = {id: string};
 export function ShowCaptionPage() {
+    const login_user = checkLoginUser();
     let { id } = useParams<ShowCaptionPageParam>();
     return (
         <div>
             <h1>id: {id} </h1>
             <h1>ソーシャルメディアで男を口説いてそうな顔</h1>
+            { login_user &&
+                <p><Link to="/boke/1">絵を描く</Link></p>
+            }
             <ul>
                 <li><Link to="/show/draw/1"><img src="/mock-love-thumbnail.png" alt=""/></Link></li>
                 <li><Link to="/show/draw/2"><img src="/mock-love-thumbnail.png" alt=""/></Link></li>
