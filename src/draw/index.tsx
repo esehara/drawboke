@@ -1,26 +1,5 @@
-import { fabric } from "fabric";
 import { useEffect, useState } from "react";
-
-function YouAreArtistCanvas() {
-    const TargetCanvasId = "awesome_drawing";
-
-    useEffect(() => {
-        const targetCanvas = new fabric.Canvas(TargetCanvasId,{
-            isDrawingMode: true,
-            height: 500,
-            width: 500,
-            backgroundColor: "#FFFFFF",
-        });
-    }, []);
-
-    return (
-        <canvas id={TargetCanvasId}></canvas>
-    )
-}
-
-
-function SetRandomLabel() {
-}
+import { YouAreArtistCanvas } from "./urartist";
 
 function TitleForDrawerLabel() {
     const [title, setTitle] = useState("友達がいるのによからぬことをする男");
