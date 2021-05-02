@@ -51,6 +51,7 @@ export function DrawingPage() {
         <div>
             <TitleForDrawerLabel />
             <YouAreArtistCanvas />
+            <button>完成</button>
         </div>    
     )
 }

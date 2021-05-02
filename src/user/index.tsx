@@ -58,12 +58,12 @@ function UserDrawingList() {
     );
 }
 
-type UserPageParams = { user_id: string };
+type UserPageParams = { id: string };
 export function UserPage() {
-    let { user_id }  = useParams<UserPageParams>();
+    let { id }  = useParams<UserPageParams>();
     return (
         <div>
-            <h1>User: { user_id }</h1>
+            <h1>User: { id }</h1>
             <UserDrawingList />
             <UserBokeForPictureList />
         </div>

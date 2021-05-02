@@ -31,6 +31,7 @@ import { DrawingPage } from "./draw/index";
 import { BokePage } from "./boke/index";
 import { UserPage } from "./user/index";
 import { ShowDrawingPage, ShowCaptionPage} from "./show/index";
+import { NotFoundPage } from "./notfound";
 
 export default function RootScreen() {
     return (
@@ -45,6 +46,7 @@ export default function RootScreen() {
                 <Route path="/show/draw/:id"><ShowDrawingPage /></Route>
                 <Route path="/show/boke/:id"><ShowCaptionPage /></Route>
                 <Route path="/user/:id" children={ <UserPage /> } />
+                <Route path="*"><NotFoundPage /></Route>
             </Switch>
         </Router>
     );
