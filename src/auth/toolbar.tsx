@@ -1,7 +1,8 @@
 import firebase from "firebase/app";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { checkLoginUser } from "../auth";
-import { Button } from "@material-ui/core";
+import { Button } from "@chakra-ui/react";
+
 export function RedirectForSignIn() {
     const provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithRedirect(provider);
@@ -22,7 +23,6 @@ function UserToolbarButtons() {
                     <li><Link to="/boke/new">絵に一言</Link></li>
                     <li>
                         <Button
-                            variant="contained" color="primary" 
                             onClick={() => { UserLogout(); }} 
                         > Log out </Button></li>
                 </ul>)
@@ -30,7 +30,6 @@ function UserToolbarButtons() {
             :   (<ul>
                     <li>
                         <Button
-                            variant="contained" color="primary" 
                             onClick={() => { RedirectForSignIn(); }}
                         > PLAY </Button>
                         </li>

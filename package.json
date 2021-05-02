@@ -17,7 +17,6 @@
   },
   "homepage": "https://github.com/esehara/drawboke#readme",
   "devDependencies": {
-    "@material-ui/core": "^4.11.4",
     "@types/fabric": "^4.2.5",
     "@types/react-dom": "^17.0.3",
     "@types/react-router-dom": "^5.1.7",
@@ -33,9 +32,14 @@
     "webpack-cli": "^4.6.0"
   },
   "dependencies": {
+    "@chakra-ui/react": "^1.6.0",
+    "@emotion/react": "^11.1.5",
+    "@emotion/styled": "^11.3.0",
     "css-loader": "^5.2.4",
     "firebase": "^8.4.2",
     "firebase-tools": "^9.10.0",
+    "framer-motion": "^4.1.11",
+    "install": "^0.13.0",
     "style-loader": "^2.0.0"
   }
 }

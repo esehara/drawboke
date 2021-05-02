@@ -1,4 +1,5 @@
 import firebase from "firebase/app";
+import { ChakraProvider } from "@chakra-ui/react"
 // TODO: あとでどこかにまとめる
 const firebaseConfig = {
     apiKey: "AIzaSyAkgTEHqsih0lmwu1hx0IYrJH8RakhYXwA",
@@ -35,20 +36,24 @@ import { NotFoundPage } from "./notfound";
 
 export default function RootScreen() {
     return (
-        <Router>
-            <div>
-                   <UserToolbar />
-            </div>
-            <Switch>
-                <Route exact path="/"> <LoginPage /> </Route>
-                <Route path="/draw/:id"><DrawingPage /> </Route>
-                <Route path="/boke/:id"><BokePage /> </Route>
-                <Route path="/show/draw/:id"><ShowDrawingPage /></Route>
-                <Route path="/show/boke/:id"><ShowCaptionPage /></Route>
-                <Route path="/user/:id" children={ <UserPage /> } />
-                <Route path="*"><NotFoundPage /></Route>
-            </Switch>
-        </Router>
+
+<ChakraProvider>
+    <Router>
+        <div>
+                <UserToolbar />
+        </div>
+        <Switch>
+            <Route exact path="/"> <LoginPage /> </Route>
+            <Route path="/draw/:id"><DrawingPage /> </Route>
+            <Route path="/boke/:id"><BokePage /> </Route>
+            <Route path="/show/draw/:id"><ShowDrawingPage /></Route>
+            <Route path="/show/boke/:id"><ShowCaptionPage /></Route>
+            <Route path="/user/:id" children={ <UserPage /> } />
+            <Route path="*"><NotFoundPage /></Route>
+        </Switch>
+    </Router>
+</ChakraProvider>
+
     );
 }
 
