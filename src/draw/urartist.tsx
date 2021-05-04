@@ -59,9 +59,12 @@ function ColorPallete(props: any) {
   )
 }
 
+
+
 type PosArray = number[];
 type lineObjects = [
   ...{
+    layer: string,
     isErase: boolean,
     color: string, 
     points:PosArray}[]
@@ -93,6 +96,20 @@ function DrawingTool(props: any) {
 
   return (
     <div>
+      <Button
+        onClick={ () => {
+          props.setLines([]);
+          props.setUndo([]);
+        }} >
+        新規
+      </Button>
+      <Button
+        onClick= {() => {
+          props.setLines(
+            props.lines.filter((line: any) => { return (line.layer != props.selectLayer)}));
+        }}>
+        レイヤークリア
+      </Button>
       <Button 
         isDisabled={props.lines.length < 1}
         onClick={ () => {undoButton(); }}>
@@ -113,6 +130,76 @@ function DrawingTool(props: any) {
     </div>
   );
 }
+function LinesToLayers(lines: lineObjects, n: number) {
+  var result: lineObjects[] = [];
+  for (var i = 0; i < n; i++){
+    let layerlines = lines.filter((line) => { return (line.layer == i.toString()) });
+    result.push(layerlines);
+  }
+  return result;
+}
+
+function LayerSelect(props: any) {
+  const { getInputProps, getCheckboxProps } = useRadio(props)
+
+  const input = getInputProps()
+  const checkbox = getCheckboxProps()
+
+  return (
+    <Box as="label">
+      <input {...input} />
+      <Box
+        {...checkbox}
+        cursor="pointer"
+        borderWidth="1px"
+        borderRadius="md"
+        boxShadow="md"
+        _checked={{
+          bg: "teal.600",
+          color: "white",
+          borderColor: "teal.600",
+          borderWidth: "3px",
+        }}
+        _focus={{
+          boxShadow: "outline",
+        }}
+        px={5}
+        py={3}
+      >
+      {props.children}
+      </Box>
+    </Box>
+  )
+}
+
+function LayerSelecter(props: any) {
+  const options = ["Layer1", "Layer2", "Layer3"];
+  const { getRootProps, getRadioProps } = useRadioGroup({
+    name: "Layer",
+    defaultValue: "0",
+    onChange: (selectNumber: string) => { 
+      props.setSelectLayer(selectNumber); 
+    },
+  });
+
+  const group = getRootProps();
+
+  return (
+  <div>
+    レイヤー
+    <HStack {...group}>
+      {options.map((value, i) => {
+        const radio = getRadioProps({ value: i.toString() })
+        return (
+          <LayerSelect key={i} {...radio}>
+            { value } 
+          </LayerSelect>
+        )
+      })}
+    </HStack>
+  </div>
+  )
+}
 
 export function YouAreArtistCanvas() {
 
@@ -120,6 +207,7 @@ export function YouAreArtistCanvas() {
     const [undoLineStock, setUndo] = useState<lineObjects>([]);
     const [color, setColor] = useState("black");
     const [isUsingErase,setUsingErase] = useState(false);
+    const [selectLayer, setSelectLayer] = useState("0");
 
     const isDrawing = useRef(false);
 
@@ -128,11 +216,13 @@ export function YouAreArtistCanvas() {
       if (undoLineStock.length > 0) { setUndo([]); }
       const pos = e.target.getStage()?.getPointerPosition();
       if (pos != null) {
-        setLines([...lines, {
+        const addLine = {
+          layer: selectLayer,
           isErase: isUsingErase,
           color: color, 
           points: [pos.x , pos.y]
-        }]);
+        }
+        setLines([...lines, addLine]);
       }
     }
  
@@ -141,7 +231,6 @@ export function YouAreArtistCanvas() {
       const point = e.target.getStage()?.getPointerPosition();
       if (point != null) {
         let lastLine = lines[lines.length - 1];
-        console.log(lastLine);
         lastLine.points = lastLine.points.concat([point.x, point.y]);
         lines.splice(lines.length - 1, 1, lastLine);
         setLines(lines.concat());
@@ -151,16 +240,21 @@ export function YouAreArtistCanvas() {
     function drawEnd(e: KonvaEventObject<MouseEvent>) {
       isDrawing.current = false;
     }
-    
+
+    const layersLines = LinesToLayers(lines ,3);
+    console.log(layersLines);
+
     return (
         <div>
             <DrawingTool 
               lines={lines}
               undoLineStock={undoLineStock}
               isUsingErase={isUsingErase}
+              selectLayer={selectLayer}
               setUndo={(value: lineObjects) => {setUndo(value); }}
               setLines={(value: lineObjects) => {setLines(value); }}
               setUsingErase={(value: boolean) => {setUsingErase(value);}} />
+            <LayerSelecter setSelectLayer={(value: string) => { setSelectLayer(value); }}/>
             <Stage
               width={600}
               height={600}
@@ -168,19 +262,21 @@ export function YouAreArtistCanvas() {
               onMouseMove={(e) => { drawNow(e); }}
               onMouseUp={(e) => {drawEnd(e);}}
             >
-              <Layer>
-            {lines.map((line, i) => (
-              <Line
-                key={i}
-                points={line.points}
-                stroke={line.color}
-                strokeWidth={5}
-                tension={0.5}
-                lineCap="round"
-                globalCompositeOperation={ line.isErase ? 'destination-out' : 'source-over'}
-              />
+            {layersLines.reverse().map((layerlines, j) => (
+              <Layer key={j}>
+              {layerlines.map((line, i) => (
+                <Line
+                  key={i}
+                  points={line.points}
+                  stroke={line.color}
+                  strokeWidth={5}
+                  tension={0.5}
+                  lineCap="round"
+                  globalCompositeOperation={ line.isErase ? 'destination-out' : 'source-over'}
+                />
+              ))}
+            </Layer>
             ))}
-              </Layer>
             </Stage>
             <ColorPallete colorChange={(color: string) => { setColor(color); }} />
         </div>
