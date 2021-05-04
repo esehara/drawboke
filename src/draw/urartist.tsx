@@ -1,5 +1,5 @@
 import { Stage, Line, Layer } from "react-konva";
-import { Box, Checkbox, HStack, useRadio, useRadioGroup} from "@chakra-ui/react"
+import { Box, Button, Checkbox, HStack, useRadio, useRadioGroup} from "@chakra-ui/react"
 import { useRef, useState } from "react";
 import { KonvaEventObject } from "konva/types/Node";
 
@@ -59,10 +59,52 @@ function ColorPallete(props: any) {
   )
 }
 
+type PosArray = number[];
+type lineObjects = [
+  ...{
+    isErase: boolean,
+    color: string, 
+    points:PosArray}[]
+];
+
 function DrawingTool(props: any) {
   const [checkEraseValue, setCheckEraseValue] = useState(false);
+  
+  function undoButton() {    
+    const lines: lineObjects = props.lines;
+    const undoLineStock: lineObjects = props.undoLineStock;
+
+    if (lines.length < 1) { return; }
+
+    props.setLines(lines.slice(0, lines.length - 1));
+    props.setUndo(undoLineStock.concat(lines.slice(-1)));
+
+  }
+
+  function redoButton() {
+    const lines: lineObjects = props.lines;
+    const undoLineStock: lineObjects = props.undoLineStock;
+
+    if (undoLineStock.length < 1) { return; }
+
+    props.setLines(lines.concat(undoLineStock.slice(-1)));
+    props.setUndo(undoLineStock.slice(0, undoLineStock.length - 1));
+  }
+
+
   return (
     <div>
+      <Button 
+        isDisabled={props.lines.length < 1}
+        onClick={ () => {undoButton(); }}>
+        Undo
+      </Button>
+      <Button
+        isDisabled={props.undoLineStock.length < 1}
+        onClick={ () => {redoButton(); }}
+        >
+        Redo
+      </Button>
       <Checkbox 
         size="lg" 
         colorScheme="orange" 
@@ -78,18 +120,10 @@ function DrawingTool(props: any) {
   );
 }
 
-
-type PosArray = number[];
-type lineObjects = [
-  ...{
-    isErase: boolean,
-    color: string, 
-    points:PosArray}[]
-];
-
 export function YouAreArtistCanvas() {
 
     const [lines, setLines] = useState<lineObjects>([]);
+    const [undoLineStock, setUndo] = useState<lineObjects>([]);
 
     var color = "black";
     var isUsingErase = false;
@@ -98,6 +132,7 @@ export function YouAreArtistCanvas() {
 
     function drawStart(e: KonvaEventObject<MouseEvent>) {
       isDrawing.current = true;
+      if (undoLineStock.length > 0) { setUndo([]); }
       const pos = e.target.getStage()?.getPointerPosition();
       if (pos != null) {
         setLines([...lines, {
@@ -111,7 +146,6 @@ export function YouAreArtistCanvas() {
     function drawNow(e: KonvaEventObject<MouseEvent>) {
       if (!isDrawing.current) { return; }
       const point = e.target.getStage()?.getPointerPosition();
-      console.log(lines);
       if (point != null) {
         let lastLine = lines[lines.length - 1];
         console.log(lastLine);
@@ -129,7 +163,12 @@ export function YouAreArtistCanvas() {
 
     return (
         <div>
-            <DrawingTool isUsingErase={(prop: boolean) => { isUsingErase = prop;}} />
+            <DrawingTool 
+              lines={lines}
+              undoLineStock={undoLineStock}
+              setUndo={(value: lineObjects) => {setUndo(value); }}
+              setLines={(value: lineObjects) => {setLines(value); }}
+              isUsingErase={(prop: boolean) => { isUsingErase = prop;}} />
             <Stage
               width={600}
               height={600}
