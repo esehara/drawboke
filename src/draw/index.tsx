@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { YouAreArtistCanvas } from "./urartist";
+import { Button } from "@chakra-ui/react";
 
 function TitleForDrawerLabel() {
     const [title, setTitle] = useState("友達がいるのによからぬことをする男");
@@ -15,12 +16,12 @@ function TitleForDrawerLabel() {
     return (
         <div>
             <h1>お題: {title} </h1>
-            <button
+            <Button
                 onClick={() => CreateNewLabel()}
-            >新規</button>
-            <button
+            >新規</Button>
+            <Button
                 onClick={() => SetRandomLabel()}
-            >変更</button>
+            >変更</Button>
         </div>
     )
 }
@@ -30,7 +31,7 @@ export function DrawingPage() {
         <div>
             <TitleForDrawerLabel />
             <YouAreArtistCanvas />
-            <button>完成</button>
+            <Button>完成</Button>
         </div>    
     )
 }
