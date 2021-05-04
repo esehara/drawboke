@@ -1,8 +1,7 @@
 import { Stage, Line, Layer } from "react-konva";
-import { Box, HStack, useRadio, useRadioGroup} from "@chakra-ui/react"
+import { Box, Checkbox, HStack, useRadio, useRadioGroup} from "@chakra-ui/react"
 import { useRef, useState } from "react";
 import { KonvaEventObject } from "konva/types/Node";
-import { GetSet } from "konva/types/types";
 
 function Pallete(props: any) {
   const { getInputProps, getCheckboxProps } = useRadio(props)
@@ -41,10 +40,10 @@ function ColorPallete(props: any) {
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: "pencilColor",
     defaultValue: "black",
-    onChange: (color) => {props.colorChange(color)},
-  })
+    onChange: (color) => { props.colorChange(color) },
+  });
 
-  const group = getRootProps()
+  const group = getRootProps();
 
   return (
     <HStack {...group}>
@@ -60,31 +59,79 @@ function ColorPallete(props: any) {
   )
 }
 
+function DrawingTool(props: any) {
+  const [checkEraseValue, setCheckEraseValue] = useState(false);
+  return (
+    <div>
+      <Checkbox 
+        size="lg" 
+        colorScheme="orange" 
+        isChecked={checkEraseValue}
+        onChange={() => { 
+          setCheckEraseValue(!checkEraseValue);
+          props.isUsingErase(checkEraseValue); 
+        }}>
+        消しゴム
+      </Checkbox>
+    </div>
+  );
+}
 
-type lineObject = [
-  {points: []}];
 
-  export function YouAreArtistCanvas() {
-    const [lines, setLines] = useState<lineObject>([]);
+type PosArray = number[];
+type lineObjects = [
+  ...{
+    isUsingErase: boolean,
+    color: string, 
+    points:PosArray}[]
+];
+
+export function YouAreArtistCanvas() {
+
+    const [lines, setLines] = useState<lineObjects>([]);
+
+    var color = "black";
+    var isUsingErase = false;
+
     const isDrawing = useRef(false);
 
     function drawStart(e: KonvaEventObject<MouseEvent>) {
       isDrawing.current = true;
-      const pos = e.target.getStage();
-      setLines([...lines, { points: [pos.x, pos.y] }]);
+      const pos = e.target.getStage()?.getPointerPosition();
+      if (pos != null) {
+        setLines([...lines, {
+          isUsingErase: isUsingErase,
+          color: color, 
+          points: [pos.x , pos.y]
+        }]);
+      }
     }
-
+ 
     function drawNow(e: KonvaEventObject<MouseEvent>) {
       if (!isDrawing.current) { return; }
+      const point = e.target.getStage()?.getPointerPosition();
+      console.log(lines);
+      if (point != null) {
+        let lastLine = lines[lines.length - 1];
+        console.log(lastLine);
+        lastLine.points = lastLine.points.concat([point.x, point.y]);
+        lines.splice(lines.length - 1, 1, lastLine);
+        setLines(lines.concat());
+      }
     }
 
     function drawEnd(e: KonvaEventObject<MouseEvent>) {
       isDrawing.current = false;
     }
     
+    function colorChange(newColor: string) { color = newColor; };
+
     return (
         <div>
+            <DrawingTool isUsingErase={(prop: boolean) => {isUsingErase=prop;}} />
             <Stage
+              width={600}
+              height={600}
               onMouseDown={(e) => { drawStart(e); }}
               onMouseMove={(e) => { drawNow(e); }}
               onMouseUp={(e) => {drawEnd(e);}}
@@ -94,13 +141,11 @@ type lineObject = [
               <Line
                 key={i}
                 points={line.points}
-                stroke="#FFFFFF"
+                stroke={line.color}
                 strokeWidth={5}
                 tension={0.5}
                 lineCap="round"
-                globalCompositeOperation={
-                  line.tool === 'eraser' ? 'destination-out' : 'source-over'
-                }
+                globalCompositeOperation='source-over'
               />
             ))}
               </Layer>
