@@ -68,7 +68,6 @@ type lineObjects = [
 ];
 
 function DrawingTool(props: any) {
-  const [checkEraseValue, setCheckEraseValue] = useState(false);
   
   function undoButton() {    
     const lines: lineObjects = props.lines;
@@ -105,17 +104,12 @@ function DrawingTool(props: any) {
         >
         Redo
       </Button>
-      <Checkbox 
-        size="lg" 
-        colorScheme="orange" 
-        isChecked={checkEraseValue}
-        onChange={() => {
-          const setflag = !checkEraseValue;
-          setCheckEraseValue(setflag);
-          props.isUsingErase(setflag); 
-        }}>
+      <Button
+        colorScheme="teal"
+        variant={props.isUsingErase ? "solid" : "outline" } 
+        onClick={() => { props.setUsingErase(!props.isUsingErase); }}>
         消しゴム
-      </Checkbox>
+      </Button>
     </div>
   );
 }
@@ -124,9 +118,8 @@ export function YouAreArtistCanvas() {
 
     const [lines, setLines] = useState<lineObjects>([]);
     const [undoLineStock, setUndo] = useState<lineObjects>([]);
-
-    var color = "black";
-    var isUsingErase = false;
+    const [color, setColor] = useState("black");
+    const [isUsingErase,setUsingErase] = useState(false);
 
     const isDrawing = useRef(false);
 
@@ -159,16 +152,15 @@ export function YouAreArtistCanvas() {
       isDrawing.current = false;
     }
     
-    function colorChange(newColor: string) { color = newColor; };
-
     return (
         <div>
             <DrawingTool 
               lines={lines}
               undoLineStock={undoLineStock}
+              isUsingErase={isUsingErase}
               setUndo={(value: lineObjects) => {setUndo(value); }}
               setLines={(value: lineObjects) => {setLines(value); }}
-              isUsingErase={(prop: boolean) => { isUsingErase = prop;}} />
+              setUsingErase={(value: boolean) => {setUsingErase(value);}} />
             <Stage
               width={600}
               height={600}
@@ -190,7 +182,7 @@ export function YouAreArtistCanvas() {
             ))}
               </Layer>
             </Stage>
-            <ColorPallete colorChange={(color: string) => { colorChange(color); }} />
+            <ColorPallete colorChange={(color: string) => { setColor(color); }} />
         </div>
     )
 }
