@@ -67,9 +67,10 @@ function DrawingTool(props: any) {
         size="lg" 
         colorScheme="orange" 
         isChecked={checkEraseValue}
-        onChange={() => { 
-          setCheckEraseValue(!checkEraseValue);
-          props.isUsingErase(checkEraseValue); 
+        onChange={() => {
+          const setflag = !checkEraseValue;
+          setCheckEraseValue(setflag);
+          props.isUsingErase(setflag); 
         }}>
         消しゴム
       </Checkbox>
@@ -81,7 +82,7 @@ function DrawingTool(props: any) {
 type PosArray = number[];
 type lineObjects = [
   ...{
-    isUsingErase: boolean,
+    isErase: boolean,
     color: string, 
     points:PosArray}[]
 ];
@@ -100,7 +101,7 @@ export function YouAreArtistCanvas() {
       const pos = e.target.getStage()?.getPointerPosition();
       if (pos != null) {
         setLines([...lines, {
-          isUsingErase: isUsingErase,
+          isErase: isUsingErase,
           color: color, 
           points: [pos.x , pos.y]
         }]);
@@ -128,7 +129,7 @@ export function YouAreArtistCanvas() {
 
     return (
         <div>
-            <DrawingTool isUsingErase={(prop: boolean) => {isUsingErase=prop;}} />
+            <DrawingTool isUsingErase={(prop: boolean) => { isUsingErase = prop;}} />
             <Stage
               width={600}
               height={600}
@@ -145,7 +146,7 @@ export function YouAreArtistCanvas() {
                 strokeWidth={5}
                 tension={0.5}
                 lineCap="round"
-                globalCompositeOperation='source-over'
+                globalCompositeOperation={ line.isErase ? 'destination-out' : 'source-over'}
               />
             ))}
               </Layer>
