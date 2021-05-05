@@ -1,6 +1,8 @@
-import { Stage, Line, Layer } from "react-konva";
+import { Stage, Line, Layer, Rect } from "react-konva";
 import { SwatchesPicker } from "react-color";
-import { Box, Button, HStack, useRadio, useRadioGroup } from "@chakra-ui/react"
+import { ImFileEmpty, ImBin, ImUndo, ImRedo } from "react-icons/im";
+import { BiEraser } from "react-icons/bi";
+import { Box, Icon, IconButton, Center, HStack, VStack, useRadio, useRadioGroup } from "@chakra-ui/react"
 import { useRef, useState } from "react";
 import { KonvaEventObject } from "konva/types/Node";
 
@@ -9,6 +11,13 @@ function PenSize(props: any) {
 
   const input = getInputProps()
   const checkbox = getCheckboxProps()
+
+  function dotSVGFactory(circleSize: number) {
+    return (
+      <Icon viewBox="0 0 100 100" boxSize="60px">
+        <circle cx="50%" cy="50%" r={circleSize} />
+      </Icon> );
+    }
 
   return (
     <Box as="label">
@@ -19,19 +28,18 @@ function PenSize(props: any) {
         borderWidth="1px"
         borderRadius="md"
         boxShadow="md"
+        width="60px"
+        height="60px"
         _checked={{
           bg: "teal.600",
           color: "white",
           borderColor: "teal.600",
-          borderWidth: "3px",
         }}
         _focus={{
           boxShadow: "outline",
         }}
-        px={5}
-        py={3}
       >
-        {props.children}
+        { dotSVGFactory(parseInt(props.children)) }
       </Box>
     </Box>
   )
@@ -97,39 +105,46 @@ function DrawingTool(props: any) {
 
 
   return (
-    <div>
-      <Button
+    <Box align="center">
+      <Box>
+      <IconButton
+        aria-label="newCanvas"
+        icon={<ImBin />}
         onClick={ () => {
           props.setLines([]);
           props.setUndo([]);
         }} >
-        新規
-      </Button>
-      <Button
+      </IconButton>
+      <IconButton
+        icon={<ImFileEmpty />}
+        aria-label="newLayer"
         onClick= {() => {
           props.setLines(
             props.lines.filter((line: any) => { return (line.layer != props.selectLayer)}));
         }}>
-        レイヤークリア
-      </Button>
-      <Button 
+      </IconButton>
+      <IconButton
+        icon={<ImUndo />}
+        aria-label="undo"
         isDisabled={props.lines.length < 1}
         onClick={ () => {undoButton(); }}>
-        Undo
-      </Button>
-      <Button
+      </IconButton>
+      <IconButton
+        icon={<ImRedo />}
+        aria-label="redo"
         isDisabled={props.undoLineStock.length < 1}
         onClick={ () => {redoButton(); }}
         >
-        Redo
-      </Button>
-      <Button
+      </IconButton>
+      <IconButton
+        icon={<BiEraser />}
+        aria-label="eraser"
         colorScheme="teal"
         variant={props.isUsingErase ? "solid" : "outline" } 
         onClick={() => { props.setUsingErase(!props.isUsingErase); }}>
-        消しゴム
-      </Button>
-    </div>
+      </IconButton>
+      </Box>
+    </Box>
   );
 }
 function LinesToLayers(lines: lineObjects, n: number) {
@@ -187,9 +202,7 @@ function LayerSelecter(props: any) {
   const group = getRootProps();
 
   return (
-  <div>
-    レイヤー
-    <HStack {...group}>
+    <VStack {...group} height="100%">
       {options.map((value, i) => {
         const radio = getRadioProps({ value: i.toString() })
         return (
@@ -198,8 +211,7 @@ function LayerSelecter(props: any) {
           </LayerSelect>
         )
       })}
-    </HStack>
-  </div>
+    </VStack>
   )
 }
 
@@ -250,15 +262,20 @@ export function YouAreArtistCanvas() {
 
     return (
         <div>
-            <DrawingTool 
-              lines={lines}
-              undoLineStock={undoLineStock}
-              isUsingErase={isUsingErase}
-              selectLayer={selectLayer}
-              setUndo={(value: lineObjects) => {setUndo(value); }}
-              setLines={(value: lineObjects) => {setLines(value); }}
-              setUsingErase={(value: boolean) => {setUsingErase(value);}} />
+            <HStack>
             <LayerSelecter setSelectLayer={(value: string) => { setSelectLayer(value); }}/>
+            <Box>
+            <Center>
+              <DrawingTool 
+                lines={lines}
+                undoLineStock={undoLineStock}
+                isUsingErase={isUsingErase}
+                selectLayer={selectLayer}
+                setUndo={(value: lineObjects) => {setUndo(value); }}
+                setLines={(value: lineObjects) => {setLines(value); }}
+                setUsingErase={(value: boolean) => {setUsingErase(value);}} />
+
+            </Center>            
             <Stage
               width={600}
               height={600}
@@ -266,6 +283,9 @@ export function YouAreArtistCanvas() {
               onMouseMove={(e) => { drawNow(e); }}
               onMouseUp={(e) => {drawEnd(e);}}
             >
+              <Layer>
+                <Rect fill="white" x={0} y={0} width={600} height={600} />
+              </Layer>
             {layersLines.reverse().map((layerlines, j) => (
               <Layer key={j}>
               {layerlines.map((line, i) => (
@@ -282,11 +302,18 @@ export function YouAreArtistCanvas() {
             </Layer>
             ))}
             </Stage>
-            <PenSizeSelecter penSizeSelect={(size: string) => { setPenSize(size); }}/>
-            <SwatchesPicker
-              color={color}
-              onChange={(picker) => { setColor(picker.hex) }}
-              />
+            </Box>
+            <Box>
+                <Box mb={6}> 
+                  <SwatchesPicker
+                  color={color}
+                  onChange={(picker) => { setColor(picker.hex) }} />
+                </Box>
+                <Box>
+                  <PenSizeSelecter penSizeSelect={(size: string) => { setPenSize(size); }}/>
+                </Box>
+            </Box>
+            </HStack>
         </div>
     )
 }

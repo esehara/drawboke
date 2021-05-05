@@ -82,13 +82,13 @@ export function Header(props: any) {
             <Spacer />
             {loginUser && 
                     (<VStack>
-                        <Box fontSize="sm" align="left">
+                        <Box fontSize="sm" align="left" color="white">
                             ようこそ
                         </Box>
                         <Box fontSize="lg" align="center">
                             <Link to="/user/esehara">{ loginUser.displayName }</Link>
                         </Box>
-                        <Box fontSize="sm" align="right">
+                        <Box fontSize="sm" align="right" color="white">
                             さん
                         </Box>
                     </VStack>) }
