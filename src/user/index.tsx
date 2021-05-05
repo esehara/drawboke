@@ -2,6 +2,9 @@ import {
     Link,
     useParams
 } from "react-router-dom";
+import {
+    Flex
+} from "@chakra-ui/react";
 
 const testBokeList = [
     "濡れたティッシュを食べる男",
@@ -62,10 +65,10 @@ type UserPageParams = { id: string };
 export function UserPage() {
     let { id }  = useParams<UserPageParams>();
     return (
-        <div>
+        <Flex>
             <h1>User: { id }</h1>
             <UserDrawingList />
             <UserBokeForPictureList />
-        </div>
+        </Flex>
     );
 }

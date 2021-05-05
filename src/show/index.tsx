@@ -1,19 +1,20 @@
-import { checkLoginUser } from "../auth";
 import {
     Link,
-    useParams
+    useParams,
 } from "react-router-dom";
+import firebase from "firebase";
+import { propNames } from "@chakra-ui/styled-system";
+
 
 type ShowDrawingPageParam = { id: string };
-export function ShowDrawingPage() {
-    const login_user = checkLoginUser();
+export function ShowDrawingPage(props: any) {
     let { id } = useParams<ShowDrawingPageParam>();
 
     return (
         <div>
             <h1>id: {id}</h1>
             <img src="/mock-love-thumbnail.png" alt=""/>
-            { login_user && 
+            { props.getCurretUser() && 
                 <p><Link to="/boke/:id">題を書く</Link></p>
             }
             <ul>
@@ -25,14 +26,13 @@ export function ShowDrawingPage() {
 }
 
 type ShowCaptionPageParam = {id: string};
-export function ShowCaptionPage() {
-    const login_user = checkLoginUser();
+export function ShowCaptionPage(props: any) {
     let { id } = useParams<ShowCaptionPageParam>();
     return (
         <div>
             <h1>id: {id} </h1>
             <h1>ソーシャルメディアで男を口説いてそうな顔</h1>
-            { login_user &&
+            { props.getCurrentUser() &&
                 <p><Link to="/boke/1">絵を描く</Link></p>
             }
             <ul>

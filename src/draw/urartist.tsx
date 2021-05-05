@@ -1,9 +1,10 @@
 import { Stage, Line, Layer } from "react-konva";
-import { Box, Button, Checkbox, HStack, useRadio, useRadioGroup} from "@chakra-ui/react"
+import { SwatchesPicker } from "react-color";
+import { Box, Button, HStack, useRadio, useRadioGroup } from "@chakra-ui/react"
 import { useRef, useState } from "react";
 import { KonvaEventObject } from "konva/types/Node";
 
-function Pallete(props: any) {
+function PenSize(props: any) {
   const { getInputProps, getCheckboxProps } = useRadio(props)
 
   const input = getInputProps()
@@ -18,8 +19,9 @@ function Pallete(props: any) {
         borderWidth="1px"
         borderRadius="md"
         boxShadow="md"
-        bg={props.children}
         _checked={{
+          bg: "teal.600",
+          color: "white",
           borderColor: "teal.600",
           borderWidth: "3px",
         }}
@@ -29,18 +31,19 @@ function Pallete(props: any) {
         px={5}
         py={3}
       >
+        {props.children}
       </Box>
     </Box>
   )
 }
 
 
-function ColorPallete(props: any) {
-  const options = ["black", "blue", "red", "yellow", "green", "purple", "white"];
+function PenSizeSelecter(props: any) {
+  const options = ["1", "5", "10", "20", "50"];
   const { getRootProps, getRadioProps } = useRadioGroup({
-    name: "pencilColor",
-    defaultValue: "black",
-    onChange: (color) => { props.colorChange(color) },
+    name: "pencilSize",
+    defaultValue: "5",
+    onChange: (size) => { props.penSizeSelect(size) },
   });
 
   const group = getRootProps();
@@ -50,22 +53,21 @@ function ColorPallete(props: any) {
       {options.map((value) => {
         const radio = getRadioProps({ value })
         return (
-          <Pallete key={value} {...radio}>
+          <PenSize key={value} {...radio}>
             {value}
-          </Pallete>
+          </PenSize>
         )
       })}
     </HStack>
   )
 }
 
-
-
 type PosArray = number[];
 type lineObjects = [
   ...{
     layer: string,
     isErase: boolean,
+    size: string,
     color: string, 
     points:PosArray}[]
 ];
@@ -205,7 +207,8 @@ export function YouAreArtistCanvas() {
 
     const [lines, setLines] = useState<lineObjects>([]);
     const [undoLineStock, setUndo] = useState<lineObjects>([]);
-    const [color, setColor] = useState("black");
+    const [color, setColor] = useState("#000000");
+    const [penSize, setPenSize] = useState("5");
     const [isUsingErase,setUsingErase] = useState(false);
     const [selectLayer, setSelectLayer] = useState("0");
 
@@ -219,6 +222,7 @@ export function YouAreArtistCanvas() {
         const addLine = {
           layer: selectLayer,
           isErase: isUsingErase,
+          size: penSize,
           color: color, 
           points: [pos.x , pos.y]
         }
@@ -269,7 +273,7 @@ export function YouAreArtistCanvas() {
                   key={i}
                   points={line.points}
                   stroke={line.color}
-                  strokeWidth={5}
+                  strokeWidth={ parseInt(line.size, 10) }
                   tension={0.5}
                   lineCap="round"
                   globalCompositeOperation={ line.isErase ? 'destination-out' : 'source-over'}
@@ -278,7 +282,11 @@ export function YouAreArtistCanvas() {
             </Layer>
             ))}
             </Stage>
-            <ColorPallete colorChange={(color: string) => { setColor(color); }} />
+            <PenSizeSelecter penSizeSelect={(size: string) => { setPenSize(size); }}/>
+            <SwatchesPicker
+              color={color}
+              onChange={(picker) => { setColor(picker.hex) }}
+              />
         </div>
     )
 }

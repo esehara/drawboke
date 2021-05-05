@@ -1,5 +1,5 @@
 import firebase from "firebase/app";
-import { ChakraProvider } from "@chakra-ui/react"
+import { ChakraProvider, extendTheme } from "@chakra-ui/react"
 // TODO: あとでどこかにまとめる
 const firebaseConfig = {
     apiKey: "AIzaSyAkgTEHqsih0lmwu1hx0IYrJH8RakhYXwA",
@@ -13,41 +13,76 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 
-import React from "react";
 import ReactDom from "react-dom";
 import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Link
 } from "react-router-dom";
+
 /*
   TODO: あとでUserPageとLoginPageを同じファイルにする
   TODO: できるなら各デフェクトリのindex.tsxにコンポーネントを集めたい
 */
 
 import { LoginPage } from "./auth/index";
-import { UserToolbar} from "./auth/toolbar";
+import { Header } from "./auth/header";
 import { DrawingPage } from "./draw/index";
 import { BokePage } from "./boke/index";
 import { UserPage } from "./user/index";
 import { ShowDrawingPage, ShowCaptionPage} from "./show/index";
 import { NotFoundPage } from "./notfound";
+import { useState, useEffect } from "react";
+
+
+const defaultTheme = extendTheme({
+    colors: {
+        white: "#fff6eb"
+    },
+    component: {
+        Box: {
+            baseStyle: {
+                p: 2,
+            }
+        }
+    },
+    styles: {
+        global: {
+            body: {
+                bg: "#fdebd1",
+                color: "#4e3819",
+            }
+        }
+    }
+});
+
 
 export default function RootScreen() {
+    const [currentUser, setUser] = useState<firebase.User|null>(null); 
+    
+    function useCurrentUserFactory(): () => firebase.User | null {
+        firebase.auth().onAuthStateChanged(function(user: firebase.User | null) {
+            setUser(user);
+        });
+        return (() => {return currentUser; });
+    }
+    const getCurrentUser: () => firebase.User | null = useCurrentUserFactory();
+
     return (
 
-<ChakraProvider>
+<ChakraProvider theme={ defaultTheme }>
     <Router>
-        <div>
-                <UserToolbar />
-        </div>
+        <Header getCurrentUser={ () => { return getCurrentUser(); }} />
         <Switch>
             <Route exact path="/"> <LoginPage /> </Route>
             <Route path="/draw/:id"><DrawingPage /> </Route>
             <Route path="/boke/:id"><BokePage /> </Route>
-            <Route path="/show/draw/:id"><ShowDrawingPage /></Route>
-            <Route path="/show/boke/:id"><ShowCaptionPage /></Route>
+            <Route path="/show/draw/:id">
+                <ShowDrawingPage getCurrentUser={ () => {return getCurrentUser()}} />
+            </Route>
+            <Route path="/show/boke/:id">
+                <ShowCaptionPage getCurrentUser={ () => {return getCurrentUser()}} />
+            </Route>
             <Route path="/user/:id" children={ <UserPage /> } />
             <Route path="*"><NotFoundPage /></Route>
         </Switch>

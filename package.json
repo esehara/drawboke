@@ -34,12 +34,14 @@
     "@chakra-ui/react": "^1.6.0",
     "@emotion/react": "^11.1.5",
     "@emotion/styled": "^11.3.0",
+    "@types/react-color": "^3.0.4",
     "css-loader": "^5.2.4",
     "firebase": "^8.4.2",
     "firebase-tools": "^9.10.0",
     "framer-motion": "^4.1.11",
     "install": "^0.13.0",
     "konva": "^7.2.5",
+    "react-color": "^2.19.3",
     "react-konva": "*",
     "style-loader": "^2.0.0"
   }
