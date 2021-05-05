@@ -2,7 +2,7 @@ import firebase from "firebase/app";
 import { Link } from "react-router-dom";
 import { GiPencilBrush, GiExitDoor } from "react-icons/gi";
 import { ImBubble } from "react-icons/im";
-import { Button, Flex, Box, Spacer, Center, VStack } from "@chakra-ui/react";
+import { Button, Flex, Box, Spacer, Center, VStack, Text } from "@chakra-ui/react";
 
 export function RedirectForSignIn() {
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -82,14 +82,20 @@ export function Header(props: any) {
             <Spacer />
             {loginUser && 
                     (<VStack>
-                        <Box fontSize="sm" align="left" color="white">
-                            ようこそ
+                        <Box align="left" width="100%">
+                            <Text fontSize="xs" align="left" color="white" width="100%">
+                                ようこそ
+                            </Text>
                         </Box>
-                        <Box fontSize="lg" align="center">
-                            <Link to="/user/esehara">{ loginUser.displayName }</Link>
-                        </Box>
-                        <Box fontSize="sm" align="right" color="white">
-                            さん
+                        <Link to="/user/esehara">
+                            <Text fontSize="xl" align="center" width="100%">
+                                { loginUser.displayName }
+                            </Text>
+                        </Link>
+                        <Box align="right" width="100%">
+                            <Text fontSize="xs" color="white">
+                                さん
+                            </Text>
                         </Box>
                     </VStack>) }
             <Spacer />
