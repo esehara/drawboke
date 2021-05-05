@@ -1,6 +1,8 @@
 import firebase from "firebase/app";
 import { Link } from "react-router-dom";
-import { Stack, Button, Flex, Box, Spacer, Center } from "@chakra-ui/react";
+import { GiPencilBrush, GiExitDoor } from "react-icons/gi";
+import { ImBubble } from "react-icons/im";
+import { Button, Flex, Box, Spacer, Center, VStack } from "@chakra-ui/react";
 
 export function RedirectForSignIn() {
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -16,24 +18,44 @@ function HeaderButtons(props: any) {
     return(
         <Center>
             { login_user
-            ?   (<Box>
-                    <Box>
-                        <Link to="/user/esehara">{ login_user.displayName }</Link>
+            ?   (<Flex>
+                    <Spacer />
+                    <Link to="/draw/new">
+                        <Center mr={6} color="white">
+                            <VStack>
+                                <Box>
+                                    <GiPencilBrush size="4em" />
+                                </Box>
+                                <Box>
+                                    絵を描く
+                                </Box>
+                            </VStack>
+                        </Center>
+                    </Link>
+                    <Link to="/boke/new">
+                        <Center mr={6} color="white">
+                            <VStack>
+                                <Box><ImBubble size="4em" /></Box>
+                                <Box>絵に一言</Box>
+                            </VStack>
+                        </Center>
+                    </Link>
+                    <Box onClick={() => { UserLogout(); }}>
+                        <Center mr={6} color="white"> 
+                            <VStack>
+                                <Box>
+                                    <GiExitDoor size="4em"/>
+                                </Box>
+                                <Box>
+                                    ログアウト
+                                </Box>
+                            </VStack>
+                        </Center>
                     </Box>
-                    <Box>
-                        <Link to="/draw/new">絵を描く</Link>
-                    </Box>
-                    <Box>
-                        <Link to="/boke/new">絵に一言</Link>
-                    </Box>
-                    <Box>
-                        <Button
-                            onClick={() => { UserLogout(); }} 
-                        > Log out </Button>
-                    </Box>
-                </Box>)
+                </Flex>)
 
             :   (
+                
                         <Button
                             onClick={() => { RedirectForSignIn(); }}
                         > PLAY </Button>
@@ -46,6 +68,7 @@ function HeaderButtons(props: any) {
 }
 
 export function Header(props: any) {
+    const loginUser = props.getCurrentUser();
     return (
         <Flex 
             as="nav"
@@ -53,11 +76,24 @@ export function Header(props: any) {
             p={2}
             wrap="wrap"
             w="100%">
-        <Box>
-            <img src="/src/logo.gif" alt="Logo"/>
-        </Box>
-        <Spacer />
-        <HeaderButtons getCurrentUser={() => { return props.getCurrentUser(); }}/>
+            <Box>
+                <img src="/src/logo.gif" alt="Logo"/>
+            </Box>
+            <Spacer />
+            {loginUser && 
+                    (<VStack>
+                        <Box fontSize="sm" align="left">
+                            ようこそ
+                        </Box>
+                        <Box fontSize="lg" align="center">
+                            <Link to="/user/esehara">{ loginUser.displayName }</Link>
+                        </Box>
+                        <Box fontSize="sm" align="right">
+                            さん
+                        </Box>
+                    </VStack>) }
+            <Spacer />
+            <HeaderButtons getCurrentUser={() => { return props.getCurrentUser(); }}/>
         </Flex>
     );
 }
