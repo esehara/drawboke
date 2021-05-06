@@ -1,6 +1,7 @@
 import firebase from "firebase/app";
-import { ChakraProvider, extendTheme } from "@chakra-ui/react"
+import "firebase/auth";
 // TODO: あとでどこかにまとめる
+
 const firebaseConfig = {
     apiKey: "AIzaSyAkgTEHqsih0lmwu1hx0IYrJH8RakhYXwA",
     authDomain: "drawboke.firebaseapp.com",
@@ -11,7 +12,10 @@ const firebaseConfig = {
     appId: "1:1008146064966:web:9e496005f27b3392d70c47",
     measurementId: "G-RJ2NWBQ1V5"
 };
+
 firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+auth.useEmulator("http://localhost:9099");
 
 import ReactDom from "react-dom";
 import {
@@ -34,6 +38,7 @@ import { ShowDrawingPage, ShowCaptionPage} from "./show/index";
 import { NotFoundPage } from "./notfound";
 import { useState, useEffect } from "react";
 
+import { ChakraProvider, extendTheme } from "@chakra-ui/react"
 
 const defaultTheme = extendTheme({
     colors: {
@@ -71,6 +76,7 @@ export default function RootScreen() {
     return (
 
 <ChakraProvider theme={ defaultTheme }>
+    
     <Router>
         <Header getCurrentUser={ () => { return getCurrentUser(); }} />
         <Switch>

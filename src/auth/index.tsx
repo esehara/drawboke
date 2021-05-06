@@ -1,8 +1,5 @@
 import firebase from "firebase/app";
-import "firebase/auth";
 import { Stack, Text, Flex, Center, Box } from "@chakra-ui/react"
-const auth = firebase.auth();
-auth.useEmulator("http://localhost:9099");
 
 export function LoginPage() {
     return (
