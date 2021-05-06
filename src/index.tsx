@@ -38,7 +38,7 @@ import { ShowDrawingPage, ShowCaptionPage} from "./show/index";
 import { NotFoundPage } from "./notfound";
 import { useState, useEffect } from "react";
 
-import { ChakraProvider, extendTheme } from "@chakra-ui/react"
+import { ChakraProvider, extendTheme, Spinner } from "@chakra-ui/react"
 
 const defaultTheme = extendTheme({
     colors: {
@@ -64,20 +64,23 @@ const defaultTheme = extendTheme({
 
 export default function RootScreen() {
     const [currentUser, setUser] = useState<firebase.User|null>(null); 
-    
+    const [doneLoading, setDoneLoading] = useState(false);
+
     function useCurrentUserFactory(): () => firebase.User | null {
         firebase.auth().onAuthStateChanged(function(user: firebase.User | null) {
             setUser(user);
+            setDoneLoading(true);
         });
-        return (() => {return currentUser; });
+        return (() => { return currentUser; });
     }
     const getCurrentUser: () => firebase.User | null = useCurrentUserFactory();
 
     return (
 
 <ChakraProvider theme={ defaultTheme }>
-    
-    <Router>
+    {!doneLoading
+    ?(<Spinner size="xl" />)
+    :(<Router>
         <Header getCurrentUser={ () => { return getCurrentUser(); }} />
         <Switch>
             <Route exact path="/"> <LoginPage /> </Route>
@@ -92,7 +95,8 @@ export default function RootScreen() {
             <Route path="/user/:id" children={ <UserPage /> } />
             <Route path="*"><NotFoundPage /></Route>
         </Switch>
-    </Router>
+    </Router>)
+    }
 </ChakraProvider>
 
     );
