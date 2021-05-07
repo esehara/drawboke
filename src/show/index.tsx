@@ -2,9 +2,6 @@ import {
     Link,
     useParams,
 } from "react-router-dom";
-import firebase from "firebase";
-import { propNames } from "@chakra-ui/styled-system";
-
 
 type ShowDrawingPageParam = { id: string };
 export function ShowDrawingPage(props: any) {

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { YouAreArtistCanvas } from "./urartist";
 import { Button, Box, VStack, Heading } from "@chakra-ui/react";
-import { GiCardPickup, GiBlackBook } from "react-icons/gi";
 
 function TitleForDrawerLabel() {
     const [title, setTitle] = useState("友達がいるのによからぬことをする男");
@@ -20,10 +19,10 @@ function TitleForDrawerLabel() {
             </Box>
             <Box align="right">
                 <Button onClick={() => CreateNewLabel()}>
-                    <GiBlackBook />　お題無しで描く
+                    お題無しで描く
                 </Button>
                 <Button onClick={() => SetRandomLabel()}>
-                    <GiCardPickup /> お題を変更する
+                    お題を変更する
                 </Button>
             </Box>
             </Box>

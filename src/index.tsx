@@ -36,9 +36,10 @@ import { BokePage } from "./boke/index";
 import { UserPage } from "./user/index";
 import { ShowDrawingPage, ShowCaptionPage} from "./show/index";
 import { NotFoundPage } from "./notfound";
-import { useState, useEffect } from "react";
+import { useState, useLayoutEffect } from "react";
 
 import { ChakraProvider, extendTheme, Spinner } from "@chakra-ui/react"
+
 
 const defaultTheme = extendTheme({
     colors: {
@@ -61,27 +62,29 @@ const defaultTheme = extendTheme({
     }
 });
 
-
 export default function RootScreen() {
-    const [currentUser, setUser] = useState<firebase.User|null>(null); 
-    const [doneLoading, setDoneLoading] = useState(false);
+    const auth = firebase.auth();
+    
+    const [isLoading, setIsLoading] = useState(
+           auth.currentUser === undefined 
+        || auth.currentUser === null);
 
-    function useCurrentUserFactory(): () => firebase.User | null {
-        firebase.auth().onAuthStateChanged(function(user: firebase.User | null) {
-            setUser(user);
-            setDoneLoading(true);
-        });
-        return (() => { return currentUser; });
-    }
-    const getCurrentUser: () => firebase.User | null = useCurrentUserFactory();
+    useLayoutEffect(() => {
+        const listener = auth.onAuthStateChanged((user: firebase.User | null) => {
+            setIsLoading(false);
+            return () => { listener(); };
+        });    
+    }, []);
 
+    const getCurrentUser: () => firebase.User | null = () => { return auth.currentUser };
+ 
     return (
 
 <ChakraProvider theme={ defaultTheme }>
-    {!doneLoading
+    {isLoading
     ?(<Spinner size="xl" />)
     :(<Router>
-        <Header getCurrentUser={ () => { return getCurrentUser(); }} />
+        <Header />
         <Switch>
             <Route exact path="/"> <LoginPage /> </Route>
             <Route path="/draw/:id"><DrawingPage /> </Route>
@@ -97,9 +100,7 @@ export default function RootScreen() {
         </Switch>
     </Router>)
     }
-</ChakraProvider>
-
-    );
+</ChakraProvider>)
 }
 
 ReactDom.render(

@@ -1,7 +1,6 @@
 import { Stage, Line, Layer, Rect } from "react-konva";
 import { SwatchesPicker } from "react-color";
-import { ImFileEmpty, ImBin, ImUndo, ImRedo } from "react-icons/im";
-import { BiEraser } from "react-icons/bi";
+import { Trash2, CornerUpLeft, CornerUpRight, File } from "react-feather";
 import { Box, Icon, IconButton, Center, HStack, VStack, useRadio, useRadioGroup } from "@chakra-ui/react"
 import { useRef, useState } from "react";
 import { KonvaEventObject } from "konva/types/Node";
@@ -109,14 +108,14 @@ function DrawingTool(props: any) {
       <Box>
       <IconButton
         aria-label="newCanvas"
-        icon={<ImBin />}
+        icon={<Trash2 />}
         onClick={ () => {
           props.setLines([]);
           props.setUndo([]);
         }} >
       </IconButton>
       <IconButton
-        icon={<ImFileEmpty />}
+        icon={<File />}
         aria-label="newLayer"
         onClick= {() => {
           props.setLines(
@@ -124,20 +123,24 @@ function DrawingTool(props: any) {
         }}>
       </IconButton>
       <IconButton
-        icon={<ImUndo />}
+        icon={<CornerUpLeft />}
         aria-label="undo"
         isDisabled={props.lines.length < 1}
         onClick={ () => {undoButton(); }}>
       </IconButton>
       <IconButton
-        icon={<ImRedo />}
+        icon={<CornerUpRight />}
         aria-label="redo"
         isDisabled={props.undoLineStock.length < 1}
         onClick={ () => {redoButton(); }}
         >
       </IconButton>
       <IconButton
-        icon={<BiEraser />}
+        icon={(
+          <Icon width="24" height="24" viewBox="0 0 24 24">
+            <path d="M2.586,15.408l4.299,4.299C7.072,19.895,7.326,20,7.592,20h0.001h2h0.4h9.6v-2h-6.958l7.222-7.222 c0.78-0.779,0.78-2.049,0-2.828L14.906,3c-0.779-0.779-2.049-0.779-2.828,0l-4.75,4.749l-4.754,4.843 C1.809,13.371,1.813,14.634,2.586,15.408z M13.492,4.414l4.95,4.95l-2.586,2.586L10.906,7L13.492,4.414z M8.749,9.156l0.743-0.742 l4.95,4.95l-4.557,4.557C9.86,17.946,9.838,17.973,9.816,18H9.593H8.006l-4.005-4.007L8.749,9.156z">
+            </path>
+          </Icon>)}
         aria-label="eraser"
         colorScheme="teal"
         variant={props.isUsingErase ? "solid" : "outline" } 
