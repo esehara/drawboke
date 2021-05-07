@@ -4,6 +4,16 @@
   "version": "0.0.1",
   "description": "皆で絵とお題を繋げてボケる",
   "main": "index.js",
+  "author": "esehara",
+  "license": "ISC",
+  "homepage": "https://github.com/esehara/drawboke#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/esehara/drawboke.git"
+  },
+  "bugs": {
+    "url": "https://github.com/esehara/drawboke/issues"
+  },
   "scripts": {
     "test": "jest",
     "lint": "eslint ./src/**/*.ts* --fix",
@@ -15,16 +25,6 @@
     "dev:serve": "firebase emulators:start",
     "watch:fmt": "npm-watch fmt",
     "count": "printf '\\e[36m\n  This project has\\e[35m %s lines\\e[36m of source code!\n\n\\e[m' $(find ./src -name '*.html' -o -name '*.css' -o -name '*.js*' -o -name '*.ts*' -o -name '*.json' | xargs wc -l | tail -1 | awk '{print $1}')"
-  },
-  "author": "esehara",
-  "license": "ISC",
-  "homepage": "https://github.com/esehara/drawboke#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/esehara/drawboke.git"
-  },
-  "bugs": {
-    "url": "https://github.com/esehara/drawboke/issues"
   },
   "watch": {
     "fmt": "{src,test}/**/*.{ts,tsx}"
