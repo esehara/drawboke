@@ -1,21 +1,22 @@
 {
   "name": "drawboke",
+  "private": true,
   "version": "0.0.1",
   "description": "皆で絵とお題を繋げてボケる",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "author": "esehara",
+  "license": "ISC",
+  "homepage": "https://github.com/esehara/drawboke#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/esehara/drawboke.git"
   },
-  "author": "",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/esehara/drawboke/issues"
   },
-  "homepage": "https://github.com/esehara/drawboke#readme",
   "devDependencies": {
     "@types/fabric": "^4.2.5",
     "@types/react-dom": "^17.0.3",
