@@ -39,6 +39,7 @@ import { NotFoundPage } from "./notfound";
 import { useState, useLayoutEffect } from "react";
 
 import { ChakraProvider, extendTheme, Spinner } from "@chakra-ui/react"
+import { resolveMotionValue } from "framer-motion";
 
 
 const defaultTheme = extendTheme({
@@ -63,25 +64,31 @@ const defaultTheme = extendTheme({
 });
 
 export default function RootScreen() {
-    const auth = firebase.auth();
-    
+
     const [isLoading, setIsLoading] = useState(
-           auth.currentUser === undefined 
-        || auth.currentUser === null);
-
+        auth.currentUser === undefined 
+     || auth.currentUser === null);
+     
+    function checkCurrentUser(): Promise<firebase.User | null> {
+      return new Promise((resolve, reject) => {
+         if (isLoading) {
+             resolve(auth.currentUser);
+         } else {
+             const unsubscribe = auth.onAuthStateChanged((user: firebase.User | null) => {
+             unsubscribe();
+             resolve(user);
+         }, reject);
+     }});
+    }
+    
     useLayoutEffect(() => {
-        const listener = auth.onAuthStateChanged((user: firebase.User | null) => {
-            setIsLoading(false);
-            return () => { listener(); };
-        });    
-    }, []);
+        checkCurrentUser().then((user) => {setIsLoading(true);
+    })}, []);
 
-    const getCurrentUser: () => firebase.User | null = () => { return auth.currentUser };
- 
     return (
 
 <ChakraProvider theme={ defaultTheme }>
-    {isLoading
+    {auth.currentUser
     ?(<Spinner size="xl" />)
     :(<Router>
         <Header />
@@ -90,10 +97,10 @@ export default function RootScreen() {
             <Route path="/draw/:id"><DrawingPage /> </Route>
             <Route path="/boke/:id"><BokePage /> </Route>
             <Route path="/show/draw/:id">
-                <ShowDrawingPage getCurrentUser={ () => {return getCurrentUser()}} />
+                <ShowDrawingPage />
             </Route>
             <Route path="/show/boke/:id">
-                <ShowCaptionPage getCurrentUser={ () => {return getCurrentUser()}} />
+                <ShowCaptionPage />
             </Route>
             <Route path="/user/:id" children={ <UserPage /> } />
             <Route path="*"><NotFoundPage /></Route>
@@ -102,6 +109,7 @@ export default function RootScreen() {
     }
 </ChakraProvider>)
 }
+
 
 ReactDom.render(
     <RootScreen />,

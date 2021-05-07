@@ -3,14 +3,17 @@ import "firebase/auth";
 import { Link } from "react-router-dom";
 import { Edit, LogOut, MessageCircle } from "react-feather";
 import { Button, Flex, Box, Spacer, Center, VStack, Text } from "@chakra-ui/react";
+import { useHistory } from "react-router-dom";
 
 export function RedirectForSignIn() {
     const provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithRedirect(provider);
 }  
 
-function UserLogout() { 
+function UserLogout() {
     firebase.auth().signOut();
+    const history = useHistory();
+    history.go(0);
 }
 
 function HeaderButtons(props: any) {
