@@ -1,4 +1,3 @@
-import firebase from "firebase/app";
 import { Stack, Text, Flex, Center, Box } from "@chakra-ui/react"
 
 export function LoginPage() {

@@ -4,14 +4,14 @@
   "description": "皆で絵とお題を繋げてボケる",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build-log": "webpack --json --progress --profile > webpack-build-log.json"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/esehara/drawboke.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/esehara/drawboke/issues"
   },
@@ -20,14 +20,16 @@
     "@types/fabric": "^4.2.5",
     "@types/react-dom": "^17.0.3",
     "@types/react-router-dom": "^5.1.7",
-    "material-js": "^1.0.0",
+    "css-loader": "^5.2.4",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^5.2.0",
+    "style-loader": "^2.0.0",
     "ts-loader": "^9.1.1",
     "typescript": "^4.2.4",
     "url-loader": "^4.1.1",
     "webpack": "^5.36.1",
+    "webpack-bundle-analyzer": "^4.4.1",
     "webpack-cli": "^4.6.0"
   },
   "dependencies": {
@@ -35,16 +37,15 @@
     "@emotion/react": "^11.1.5",
     "@emotion/styled": "^11.3.0",
     "@types/react-color": "^3.0.4",
-    "@types/react-icons": "^3.0.0",
-    "css-loader": "^5.2.4",
+    "boxicons": "^2.0.7",
+    "feather-icons": "^4.28.0",
     "firebase": "^8.4.2",
     "firebase-tools": "^9.10.0",
     "framer-motion": "^4.1.11",
     "install": "^0.13.0",
     "konva": "^7.2.5",
     "react-color": "^2.19.3",
-    "react-icon": "^1.0.0",
-    "react-konva": "*",
-    "style-loader": "^2.0.0"
+    "react-feather": "^2.0.9",
+    "react-konva": "*"
   }
 }

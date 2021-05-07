@@ -1,7 +1,7 @@
 import firebase from "firebase/app";
+import "firebase/auth";
 import { Link } from "react-router-dom";
-import { GiPencilBrush, GiExitDoor } from "react-icons/gi";
-import { ImBubble } from "react-icons/im";
+import { Edit, LogOut, MessageCircle } from "react-feather";
 import { Button, Flex, Box, Spacer, Center, VStack, Text } from "@chakra-ui/react";
 
 export function RedirectForSignIn() {
@@ -14,17 +14,17 @@ function UserLogout() {
 }
 
 function HeaderButtons(props: any) {
-    const login_user = props.getCurrentUser();
+    const currentUser = firebase.auth().currentUser;
     return(
         <Center>
-            { login_user
+            { currentUser
             ?   (<Flex>
                     <Spacer />
                     <Link to="/draw/new">
                         <Center mr={6} color="white">
                             <VStack>
                                 <Box>
-                                    <GiPencilBrush size="4em" />
+                                    <Edit size="4em" />
                                 </Box>
                                 <Box>
                                     絵を描く
@@ -35,7 +35,7 @@ function HeaderButtons(props: any) {
                     <Link to="/boke/new">
                         <Center mr={6} color="white">
                             <VStack>
-                                <Box><ImBubble size="4em" /></Box>
+                                <Box><MessageCircle size="4em" /></Box>
                                 <Box>絵に一言</Box>
                             </VStack>
                         </Center>
@@ -44,7 +44,7 @@ function HeaderButtons(props: any) {
                         <Center mr={6} color="white"> 
                             <VStack>
                                 <Box>
-                                    <GiExitDoor size="4em"/>
+                                    <LogOut size="4em"/>
                                 </Box>
                                 <Box>
                                     ログアウト
@@ -68,7 +68,7 @@ function HeaderButtons(props: any) {
 }
 
 export function Header(props: any) {
-    const loginUser = props.getCurrentUser();
+    const loginUser = firebase.auth().currentUser;
     return (
         <Flex 
             as="nav"
@@ -99,7 +99,7 @@ export function Header(props: any) {
                         </Box>
                     </VStack>) }
             <Spacer />
-            <HeaderButtons getCurrentUser={() => { return props.getCurrentUser(); }}/>
+            <HeaderButtons />
         </Flex>
     );
 }
