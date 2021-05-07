@@ -20,7 +20,7 @@
     "fmt": "run-s prettier lint",
     "start": "run-p count dev:** watch:**",
     "build": "webpack --mode=production --progress",
-    "build-log": "webpack --json --progress --profile > webpack-build-log.json",
+    "build:log": "webpack --json --progress --profile > webpack-build-log.json",
     "dev:js": "webpack watch --mode=development --progress",
     "dev:serve": "firebase emulators:start",
     "watch:fmt": "npm-watch fmt",
