@@ -5,22 +5,18 @@ import { Edit, LogOut, MessageCircle } from "react-feather";
 import { Button, Flex, Box, Spacer, Center, VStack, Text } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
 
-export function RedirectForSignIn() {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    firebase.auth().signInWithRedirect(provider);
-}  
-
-function UserLogout() {
-    firebase.auth().signOut();
-    const history = useHistory();
-    history.go(0);
-}
 
 function HeaderButtons(props: any) {
-    const currentUser = firebase.auth().currentUser;
+    const history = useHistory();
+    
+    const UserLogout = () => {
+        firebase.auth().signOut();
+        history.go(0);
+    }
+
     return(
         <Center>
-            { currentUser
+            { firebase.auth().currentUser
             ?   (<Flex>
                     <Spacer />
                     <Link to="/draw/new">
@@ -60,7 +56,7 @@ function HeaderButtons(props: any) {
             :   (
                 
                         <Button
-                            onClick={() => { RedirectForSignIn(); }}
+                            onClick={() => { props.RedirectForSignIn(); }}
                         > PLAY </Button>
                 )
             
@@ -71,7 +67,6 @@ function HeaderButtons(props: any) {
 }
 
 export function Header(props: any) {
-    const loginUser = firebase.auth().currentUser;
     return (
         <Flex 
             as="nav"
@@ -83,7 +78,7 @@ export function Header(props: any) {
                 <img src="/src/logo.gif" alt="Logo"/>
             </Box>
             <Spacer />
-            {loginUser && 
+            {firebase.auth().currentUser && 
                     (<VStack>
                         <Box align="left" width="100%">
                             <Text fontSize="xs" align="left" color="white" width="100%">
@@ -92,7 +87,7 @@ export function Header(props: any) {
                         </Box>
                         <Link to="/user/esehara">
                             <Text fontSize="xl" align="center" width="100%">
-                                { loginUser.displayName }
+                                { firebase.auth().currentUser?.displayName }
                             </Text>
                         </Link>
                         <Box align="right" width="100%">
@@ -102,7 +97,7 @@ export function Header(props: any) {
                         </Box>
                     </VStack>) }
             <Spacer />
-            <HeaderButtons />
+            <HeaderButtons RedirectForSignIn={() => { return props.RedirectForSignIn(); }} />
         </Flex>
     );
 }
