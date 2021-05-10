@@ -1,11 +1,10 @@
 import { Stage, Line, Layer, Rect } from "react-konva";
 import { SwatchesPicker } from "react-color";
-import { Trash2, CornerUpLeft, CornerUpRight, File, Plus, ChevronsUp, X } from "react-feather";
+import { Trash2, CornerUpLeft, CornerUpRight, File, Plus, ChevronsUp } from "react-feather";
 import { Box, Icon, IconButton, Center, HStack, VStack, useRadio, useRadioGroup } from "@chakra-ui/react";
 import { createIcon } from "@chakra-ui/icon"
-import { useRef, useState, VideoHTMLAttributes } from "react";
+import { useRef, useState } from "react";
 import { KonvaEventObject } from "konva/types/Node";
-import { isPresent } from "framer-motion/types/components/AnimatePresence/use-presence";
 
 function PenSize(props: any) {
   const { getInputProps, getCheckboxProps } = useRadio(props)

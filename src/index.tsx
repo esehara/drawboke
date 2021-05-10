@@ -5,7 +5,6 @@ import "firebase/database";
 // TODO: あとでどこかにまとめる
 
 import ReactDom from "react-dom";
-import { useHistory } from "react-router";
 import {
     BrowserRouter as Router,
     Switch,
@@ -24,8 +23,8 @@ import { BokePage } from "./boke/index";
 import { UserPage } from "./user/index";
 import { ShowDrawingPage, ShowCaptionPage} from "./show/index";
 import { NotFoundPage } from "./notfound";
-import { useState, useLayoutEffect, useReducer, useEffect } from "react";
-import { ChakraProvider, extendTheme, Spinner, Box } from "@chakra-ui/react"
+import { useState, useEffect } from "react";
+import { ChakraProvider, extendTheme, Spinner} from "@chakra-ui/react"
 
 const defaultTheme = extendTheme({
     colors: {
@@ -63,38 +62,29 @@ firebase.auth().useEmulator("http://localhost:9099");
 firebase.firestore().useEmulator("localhost", 8080);
 firebase.database().useEmulator("localhost", 9000);
 
-const provider = new firebase.auth.GoogleAuthProvider();
+const provider = new firebase.auth.TwitterAuthProvider();
 export default function Root() {
     const [loginState, setLoginState] = useState("ready");
-    const history = useHistory();
     const isRedireced = window.localStorage.getItem("redirected");
+
     const RedirectForSignIn = () => {
         window.localStorage.setItem("redirected", "true");
         firebase.auth().signInWithRedirect(provider);
     }  
 
     useEffect(() => {
-        console.log("----> LoginState");
-        console.log(loginState);
         if (loginState === "ready") {
-            firebase.auth().getRedirectResult().then((user) => {
-                console.log(user);
-
-                return user;
-            }).catch((e) => {
-                console.log("射精できないよー");
-                console.log(e);
-
-                return e;
-            }).finally(() => {
+            if ( isRedireced === "true" || !(firebase.auth().currentUser)) {
+                firebase.auth().getRedirectResult().then()
+                    .finally(() => {
+                        setLoginState("check");
+                        window.localStorage.removeItem("redirected");
+                    });
+            } else {
                 setLoginState("check");
-            });
+            }
         } else if (loginState === "check") {
-            firebase.auth().onAuthStateChanged((user) => { 
-                console.log("でっかい巨根");
-                console.log(user); 
-                setLoginState("render");
-            });            
+            firebase.auth().onAuthStateChanged((user) => setLoginState("render"));            
         };
     }, [loginState]);
 
