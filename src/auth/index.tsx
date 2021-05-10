@@ -10,8 +10,8 @@ export function LoginPage() {
                     bg="white" 
                     p={6} >
                     <Stack spacing={2}>
-                        <Text fontSize="5xl">ようこそ、DrawBokeへ</Text>
-                        <Text fontSize="5xl">絵と言葉で繋がる遊び場</Text>
+                        <Text fontSize="5xl">ようこそ、DrawBoke</Text>
+                        <Text fontSize="5xl">絵と言葉で繋がる遊び場へ</Text>
                     </Stack>
                 </Box>
             </Center>
