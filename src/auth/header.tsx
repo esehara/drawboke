@@ -4,9 +4,15 @@ import { Link } from "react-router-dom";
 import { Edit, LogOut, MessageCircle } from "react-feather";
 import { Button, Flex, Box, Spacer, Center, VStack, Text } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
+import { MutableRefObject } from "react";
+import { DrawbokeUser } from "../util/db";
 
+type HeaderButtonsProps = {
+    RedirectForSignIn: () => void,
+    user: MutableRefObject<DrawbokeUser | null>
+}
 
-function HeaderButtons(props: any) {
+function HeaderButtons(props: HeaderButtonsProps) {
     const history = useHistory();
     
     const UserLogout = () => {
@@ -16,7 +22,7 @@ function HeaderButtons(props: any) {
 
     return(
         <Center>
-            { firebase.auth().currentUser
+            { props.user.current
             ?   (<Flex>
                     <Spacer />
                     <Link to="/draw/new">
@@ -66,7 +72,12 @@ function HeaderButtons(props: any) {
 
 }
 
-export function Header(props: any) {
+type HeaderProps = {
+    RedirectForSignIn: () => void,
+    user: MutableRefObject<DrawbokeUser | null>,
+}
+
+export function Header(props: HeaderProps) {
     return (
         <Flex 
             as="nav"
@@ -78,7 +89,7 @@ export function Header(props: any) {
                 <img src="/src/logo.gif" alt="Logo"/>
             </Box>
             <Spacer />
-            {firebase.auth().currentUser && 
+            { props.user.current && 
                     (<VStack>
                         <Box align="left" width="100%">
                             <Text fontSize="xs" align="left" color="white" width="100%">
@@ -87,7 +98,7 @@ export function Header(props: any) {
                         </Box>
                         <Link to="/user/esehara">
                             <Text fontSize="xl" align="center" width="100%">
-                                { firebase.auth().currentUser?.displayName }
+                                { props.user.current.displayName }
                             </Text>
                         </Link>
                         <Box align="right" width="100%">
@@ -97,7 +108,9 @@ export function Header(props: any) {
                         </Box>
                     </VStack>) }
             <Spacer />
-            <HeaderButtons RedirectForSignIn={() => { return props.RedirectForSignIn(); }} />
+            <HeaderButtons 
+                user={props.user}
+                RedirectForSignIn={() => { return props.RedirectForSignIn(); }} />
         </Flex>
     );
 }

@@ -1,7 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/auth";
-import "firebase/firestore";
 import "firebase/database";
+import "firebase/firestore";
 // TODO: あとでどこかにまとめる
 
 import ReactDom from "react-dom";
@@ -23,7 +23,7 @@ import { BokePage } from "./boke/index";
 import { UserPage } from "./user/index";
 import { ShowDrawingPage, ShowCaptionPage} from "./show/index";
 import { NotFoundPage } from "./notfound";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ChakraProvider, extendTheme, Spinner} from "@chakra-ui/react"
 
 const defaultTheme = extendTheme({
@@ -57,14 +57,19 @@ const firebaseConfig = {
     appId: "1:1008146064966:web:9e496005f27b3392d70c47",
     measurementId: "G-RJ2NWBQ1V5"
 };
+
 firebase.initializeApp(firebaseConfig);
 firebase.auth().useEmulator("http://localhost:9099");
-firebase.firestore().useEmulator("localhost", 8080);
 firebase.database().useEmulator("localhost", 9000);
+firebase.firestore().useEmulator("localhost", 8080);
 
 const provider = new firebase.auth.TwitterAuthProvider();
+
+import { addFromAuthToStore, getFromAuthToStore, DrawbokeUser } from "./util/db";
+
 export default function Root() {
-    const [loginState, setLoginState] = useState("ready");
+    const [loginState, setLoginState] = useState("init");
+    const user = useRef<DrawbokeUser | null>(null);
     const isRedireced = window.localStorage.getItem("redirected");
 
     const RedirectForSignIn = () => {
@@ -73,26 +78,43 @@ export default function Root() {
     }  
 
     useEffect(() => {
-        if (loginState === "ready") {
-            if ( isRedireced === "true" || !(firebase.auth().currentUser)) {
-                firebase.auth().getRedirectResult().then()
-                    .finally(() => {
-                        setLoginState("check");
-                        window.localStorage.removeItem("redirected");
-                    });
-            } else {
-                setLoginState("check");
-            }
-        } else if (loginState === "check") {
-            firebase.auth().onAuthStateChanged((user) => setLoginState("render"));            
-        };
+        switch(loginState) {
+            case "init":
+                if ( isRedireced === "true") {
+                    firebase.auth().getRedirectResult()
+                        .then((credential) => {
+                            return addFromAuthToStore(firebase.firestore(), credential)
+                                .then((drawbokeUser) => { 
+                                    user.current = drawbokeUser; 
+                                    return;
+                                });
+                        })
+                        .finally(() => {
+                            setLoginState("check");
+                            window.localStorage.removeItem("redirected");
+                        });
+                } else {
+                    setLoginState("check");
+                }
+                break;
+            case "check":
+                firebase.auth().onAuthStateChanged((userFromAuth) => {
+                        getFromAuthToStore(firebase.firestore(), userFromAuth).then((userFromStore) => {
+                            user.current = userFromStore;
+                            setLoginState("render");
+                        });
+                });            
+                break;
+        }
     }, [loginState]);
 
     return (
 <ChakraProvider theme={ defaultTheme }>
     <Router>
     {(loginState === "render") && 
-        (<Header RedirectForSignIn={ () => { RedirectForSignIn(); } } />)}
+        (<Header
+            user={user} 
+            RedirectForSignIn={ () => { RedirectForSignIn(); } } />)}
     {(loginState !== "render")
         ? (<Spinner size="xl" />)
         : (<MainPage />) }
