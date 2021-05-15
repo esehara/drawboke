@@ -1,6 +1,6 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
-import { DrawbokeUser } from ".";
+import { DrawbokeUser } from "./user";
 
 const BokeTextMax = 80;
 export const isOkBokeTextLength: (a: string) => boolean = 

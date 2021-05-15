@@ -5,7 +5,7 @@ import { Edit, LogOut, MessageCircle } from "react-feather";
 import { Button, Flex, Box, Spacer, Center, VStack, Text } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
 import { MutableRefObject } from "react";
-import { DrawbokeUser } from "../util/db";
+import { DrawbokeUser } from "../util/db/user";
 
 type HeaderButtonsProps = {
     RedirectForSignIn: () => void,

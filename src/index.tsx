@@ -68,7 +68,7 @@ firebase.firestore().useEmulator("localhost", 8080);
 
 const provider = new firebase.auth.TwitterAuthProvider();
 
-import { addFromAuthToStore, getFromAuthToStore, DrawbokeUser } from "./util/db";
+import { addFromAuthToStore, getFromAuthToStore, DrawbokeUser } from "./util/db/user";
 
 export default function Root() {
     const [loginState, setLoginState] = useState("init");

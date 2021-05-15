@@ -3,7 +3,7 @@ import "firebase/firestore";
 import {VStack, Center, Input, Box, Button} from "@chakra-ui/react";
 import {isOkBokeTextLength, addBoke} from "../util/db/boke";
 import {useState} from "react";
-import {DrawbokeUser} from "../util/db";
+import {DrawbokeUser} from "../util/db/user";
 import {useHistory} from "react-router-dom";
 
 type BokeProps = {
