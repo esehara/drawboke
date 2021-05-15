@@ -59,9 +59,12 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
+firebase.firestore().settings({ignoreUndefinedProperties: true});
+
 firebase.auth().useEmulator("http://localhost:9099");
 firebase.database().useEmulator("localhost", 9000);
 firebase.firestore().useEmulator("localhost", 8080);
+
 
 const provider = new firebase.auth.TwitterAuthProvider();
 
@@ -78,18 +81,22 @@ export default function Root() {
     }  
 
     useEffect(() => {
+        console.log(loginState);
         switch(loginState) {
             case "init":
                 if ( isRedireced === "true") {
                     firebase.auth().getRedirectResult()
                         .then((credential) => {
+                            console.log("getRedirectResult")
                             return addFromAuthToStore(firebase.firestore(), credential)
                                 .then((drawbokeUser) => { 
+                                    console.log("addFromAuthToStore");
                                     user.current = drawbokeUser; 
                                     return;
                                 });
                         })
                         .finally(() => {
+                            console.log("getRedirectResult.finally");
                             setLoginState("check");
                             window.localStorage.removeItem("redirected");
                         });
@@ -99,9 +106,12 @@ export default function Root() {
                 break;
             case "check":
                 firebase.auth().onAuthStateChanged((userFromAuth) => {
-                        getFromAuthToStore(firebase.firestore(), userFromAuth).then((userFromStore) => {
-                            user.current = userFromStore;
-                            setLoginState("render");
+                        console.log("onAuthStateChange");
+                        getFromAuthToStore(firebase.firestore(), userFromAuth).then(
+                            (userFromStore) => {
+                                console.log("getFromAuthToStore.then");
+                                user.current = userFromStore;
+                                setLoginState("render");
                         });
                 });            
                 break;
@@ -117,17 +127,21 @@ export default function Root() {
             RedirectForSignIn={ () => { RedirectForSignIn(); } } />)}
     {(loginState !== "render")
         ? (<Spinner size="xl" />)
-        : (<MainPage />) }
+        : (<MainPage user={user} db={firebase.firestore()} />) }
     </Router>
 </ChakraProvider>)
 }
 
-function MainPage(props: any) {
+type MainProps = {
+    user: React.MutableRefObject<DrawbokeUser | null>,
+    db: firebase.firestore.Firestore
+}
+function MainPage(props: MainProps) {
     return (
 <Switch>
     <Route exact path="/"> <LoginPage /> </Route>
     <Route path="/draw/:id"><DrawingPage /> </Route>
-    <Route path="/boke/:id"><BokePage /> </Route>
+    <Route path="/boke/:id"><BokePage user={props.user} db={props.db} /> </Route>
     <Route path="/show/draw/:id">
         <ShowDrawingPage />
     </Route>

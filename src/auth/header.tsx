@@ -96,7 +96,7 @@ export function Header(props: HeaderProps) {
                                 ようこそ
                             </Text>
                         </Box>
-                        <Link to="/user/esehara">
+                        <Link to={"/user/" + props.user.current.screenName }>
                             <Text fontSize="xl" align="center" width="100%">
                                 { props.user.current.displayName }
                             </Text>
