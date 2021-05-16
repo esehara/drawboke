@@ -5,7 +5,7 @@ import { Box, Button, Center, HStack, Icon, IconButton, VStack, useRadio, useRad
 import { createIcon } from "@chakra-ui/icon"
 import { useRef, useState } from "react"
 import { KonvaEventObject } from "konva/types/Node"
-import { uploadImage } from "../util/db/draw"
+import { addDraw } from "../util/db/draw"
 import Konva from "konva"
 import { DrawbokeUser } from "../util/db/user"
 
@@ -322,6 +322,7 @@ export function YouAreArtistCanvas(props: ArtistProps) {
     const [isUsingErase,setUsingErase] = useState(false)
     const [selectLayer, setSelectLayer] = useState(0)
     const isDrawing = useRef(false)
+    const [isSending, setIsSending] = useState(false)
 
     function drawStart(e: KonvaEventObject<MouseEvent>) {
       isDrawing.current = true
@@ -356,12 +357,16 @@ export function YouAreArtistCanvas(props: ArtistProps) {
     }
 
     function doneDrawing() {
-      if (null === props.user.current) { return }
-      if (null === canvasRef.current)  { return }
-
-      uploadImage(
-        canvasRef.current.toDataURL(),
-        props.user.current)
+      setIsSending(true)
+      new Promise<string>((resolve, reject) => {
+        if (null === canvasRef.current) { reject("Canvas is not reference")}
+        else { canvasRef.current.toDataURL({callback: (result) => { resolve(result)}}) }
+      }).then((result: string) => {
+        if (null === props.user.current) { 
+          throw Error("User data is not set but drawing is send") 
+        }
+        return addDraw(result, props.user.current)
+      }).then(() => setIsSending(false))
     }
 
     return (
@@ -430,7 +435,8 @@ export function YouAreArtistCanvas(props: ArtistProps) {
             </HStack>
             <Box>
               <HStack>
-                {props.user.current && <Button onClick={() => {}}>完成</Button>}
+                {props.user.current && 
+                  <Button onClick={() => { doneDrawing() }} isLoading={isSending}>完成</Button>}
               </HStack>
             </Box>        
         </VStack>

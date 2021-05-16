@@ -80,9 +80,10 @@ export async function addBoke(
         .firestore()
         .collection("boke")
         .withConverter(bokeConverter);
-    const newBoke = (await (await bokeDocRef.add(new Boke(text, user))).get()).data();
+    const newBoke = new Boke(text, user)
+    const result = (await bokeDocRef.add(newBoke));
     
-    if (newBoke === undefined) {
+    if (undefined === result) {
         throw Error("Cannot create new Boke");
     }
     await user.addBoke(newBoke);
