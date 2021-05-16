@@ -1,6 +1,8 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
+import "firebase/storage";
 import { DrawbokeUser } from "./user"
+import Stage from "konva";
 
 export class Draw {
     uid?: string;
@@ -26,4 +28,35 @@ export class Draw {
         this.createDate = date ?? firebase.firestore.Timestamp.fromDate(new Date());   
     }
 
+}
+
+export function uploadImage(
+    imageStr: string,
+    user: DrawbokeUser, 
+    storage: firebase.storage.Storage,
+    db: firebase.firestore.Firestore) {
+    const storageRef = storage.ref();
+    const uploadTask = storageRef
+        .child("images/" + user.screenName + new Date().toString() + ".png")
+        .putString(imageStr);
+
+    uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+        function(snapshot) {
+          var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+          switch (snapshot.state) {
+            case firebase.storage.TaskState.PAUSED:
+              console.log('Upload is paused');
+              break;
+            case firebase.storage.TaskState.RUNNING:
+              console.log('Upload is running');
+              break;
+          }
+        }, function(error) {
+      
+        }, function() {
+        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+          console.log('File available at', downloadURL);
+        });
+    }); 
 }

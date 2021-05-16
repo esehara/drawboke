@@ -1,10 +1,17 @@
 import { Stage, Line, Layer, Rect } from "react-konva";
 import { SwatchesPicker } from "react-color";
-import { Trash2, CornerUpLeft, CornerUpRight, File, Plus, ChevronsUp } from "react-feather";
-import { Box, Icon, IconButton, Center, HStack, VStack, useRadio, useRadioGroup } from "@chakra-ui/react";
+import { Trash2, CornerUpLeft, CornerUpRight, File, Plus, ChevronsUp, User } from "react-feather";
+import { Box, Button, Icon, IconButton, Center, HStack, VStack, useRadio, useRadioGroup } from "@chakra-ui/react";
 import { createIcon } from "@chakra-ui/icon"
 import { useRef, useState } from "react";
 import { KonvaEventObject } from "konva/types/Node";
+import { uploadImage } from "../util/db/draw";
+import Konva from "konva";
+import { DrawbokeUser } from "../util/db/user";
+
+import firebase from "firebase/app";
+import "firebase/firestore";
+import "firebase/storage";
 
 function PenSize(props: any) {
   const { getInputProps, getCheckboxProps } = useRadio(props)
@@ -304,7 +311,14 @@ function LayerController(props: LayerProps) {
   </Box>)
 }
 
-export function YouAreArtistCanvas() {
+type ArtistProps = {
+  user: React.MutableRefObject<DrawbokeUser | null>,
+  storage: firebase.storage.Storage,
+  db: firebase.firestore.Firestore,
+}
+
+export function YouAreArtistCanvas(props: ArtistProps) {
+    const canvasRef = useRef<Konva.Stage>(null);
     const [layerSize, setLayerSize] = useState<number>(3);
     const [lines, setLines] = useState<Array<lineObject>>([]);
     const [undoCounter, setUndoCounter] = useState(0);
@@ -347,8 +361,19 @@ export function YouAreArtistCanvas() {
       isDrawing.current = false;
     }
 
+    function doneDrawing() {
+      if (null === props.user.current) { return }
+      if (null === canvasRef.current)  { return }
+
+      uploadImage(
+        canvasRef.current.toDataURL(),
+        props.user.current,
+        props.storage,
+        props.db);
+    }
+
     return (
-        <div>
+        <VStack>
             <HStack>
             <LayerController
               lines = { lines }
@@ -373,6 +398,7 @@ export function YouAreArtistCanvas() {
 
             </Center>            
             <Stage
+              ref={canvasRef}
               width={600}
               height={600}
               onMouseDown={(e) => { drawStart(e); }}
@@ -410,7 +436,12 @@ export function YouAreArtistCanvas() {
                 </Box>
             </Box>
             </HStack>
-        </div>
+            <Box>
+              <HStack>
+                {props.user.current && <Button onClick={() => {}}>完成</Button>}
+              </HStack>
+            </Box>        
+        </VStack>
     )
 }
 

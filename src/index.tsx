@@ -2,6 +2,7 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
 import "firebase/firestore";
+
 // TODO: あとでどこかにまとめる
 
 import ReactDom from "react-dom";
@@ -61,10 +62,11 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 firebase.firestore().settings({ignoreUndefinedProperties: true});
 
-firebase.auth().useEmulator("http://localhost:9099");
-firebase.database().useEmulator("localhost", 9000);
-firebase.firestore().useEmulator("localhost", 8080);
-
+if (process.env.NODE_ENV=="development") {
+    firebase.auth().useEmulator("http://localhost:9099");
+    firebase.database().useEmulator("localhost", 9000);
+    firebase.firestore().useEmulator("localhost", 8080);    
+}
 
 const provider = new firebase.auth.TwitterAuthProvider();
 
@@ -127,7 +129,7 @@ export default function Root() {
             RedirectForSignIn={ () => { RedirectForSignIn(); } } />)}
     {(loginState !== "render")
         ? (<Spinner size="xl" />)
-        : (<MainPage user={user} db={firebase.firestore()} />) }
+        : (<MainPage user={user} db={firebase.firestore()} storage={firebase.storage()}/>) }
     </Router>
 </ChakraProvider>)
 }
@@ -135,12 +137,16 @@ export default function Root() {
 type MainProps = {
     user: React.MutableRefObject<DrawbokeUser | null>,
     db: firebase.firestore.Firestore
+    storage: firebase.storage.Storage
 }
+
 function MainPage(props: MainProps) {
     return (
 <Switch>
     <Route exact path="/"> <LoginPage /> </Route>
-    <Route path="/draw/:id"><DrawingPage /> </Route>
+    <Route path="/draw/:id">
+        <DrawingPage user={props.user} db={props.db} storage={props.storage} /> 
+    </Route>
     <Route path="/boke/:id"><BokePage user={props.user} db={props.db} /> </Route>
     <Route path="/show/draw/:id">
         <ShowDrawingPage />

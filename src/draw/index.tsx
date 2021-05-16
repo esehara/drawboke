@@ -1,6 +1,10 @@
+import firebase from "firebase/app";
+import "firebase/firestore";
+import "firebase/storage";
 import { useState } from "react";
 import { YouAreArtistCanvas } from "./urartist";
 import { Button, Box, VStack, Heading } from "@chakra-ui/react";
+import { DrawbokeUser } from "../util/db/user";
 
 function TitleForDrawerLabel() {
     const [title, setTitle] = useState("友達がいるのによからぬことをする男");
@@ -28,8 +32,13 @@ function TitleForDrawerLabel() {
             </Box>
     )
 }
+type DrawingProps = {
+    user: React.MutableRefObject<DrawbokeUser | null>,
+    storage: firebase.storage.Storage,
+    db: firebase.firestore.Firestore,
+}
 
-export function DrawingPage() {
+export function DrawingPage(props: DrawingProps) {
     return (
         <Box width="80%" m="0 auto">
             <VStack>
@@ -37,10 +46,7 @@ export function DrawingPage() {
                     <TitleForDrawerLabel />
                 </Box>
                 <Box>
-                    <YouAreArtistCanvas />
-                </Box>
-                <Box>
-                    <Button>完成</Button>
+                    <YouAreArtistCanvas user={props.user} storage={props.storage} db={props.db} />
                 </Box>
             </VStack>
         </Box>    
