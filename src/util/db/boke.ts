@@ -75,9 +75,9 @@ const bokeConverter: firebase.firestore.FirestoreDataConverter<Boke> = {
 export async function addBoke(
     text: string,
     user: DrawbokeUser,
-    db: firebase.firestore.Firestore
     ) {
-    const bokeDocRef = db
+    const bokeDocRef = firebase
+        .firestore()
         .collection("boke")
         .withConverter(bokeConverter);
     const newBoke = (await (await bokeDocRef.add(new Boke(text, user))).get()).data();
@@ -85,6 +85,6 @@ export async function addBoke(
     if (newBoke === undefined) {
         throw Error("Cannot create new Boke");
     }
-    await user.addBoke(newBoke, db);
+    await user.addBoke(newBoke);
     return newBoke;
 }

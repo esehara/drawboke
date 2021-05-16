@@ -90,7 +90,7 @@ export default function Root() {
                     firebase.auth().getRedirectResult()
                         .then((credential) => {
                             console.log("getRedirectResult")
-                            return addFromAuthToStore(firebase.firestore(), credential)
+                            return addFromAuthToStore(credential)
                                 .then((drawbokeUser) => { 
                                     console.log("addFromAuthToStore");
                                     user.current = drawbokeUser; 
@@ -109,8 +109,7 @@ export default function Root() {
             case "check":
                 firebase.auth().onAuthStateChanged((userFromAuth) => {
                         console.log("onAuthStateChange");
-                        getFromAuthToStore(firebase.firestore(), userFromAuth).then(
-                            (userFromStore) => {
+                        getFromAuthToStore(userFromAuth).then((userFromStore) => {
                                 console.log("getFromAuthToStore.then");
                                 user.current = userFromStore;
                                 setLoginState("render");
@@ -147,7 +146,7 @@ function MainPage(props: MainProps) {
     <Route path="/draw/:id">
         <DrawingPage user={props.user} db={props.db} storage={props.storage} /> 
     </Route>
-    <Route path="/boke/:id"><BokePage user={props.user} db={props.db} /> </Route>
+    <Route path="/boke/:id"><BokePage user={props.user} /> </Route>
     <Route path="/show/draw/:id">
         <ShowDrawingPage />
     </Route>

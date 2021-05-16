@@ -32,12 +32,12 @@ export class DrawbokeUser {
         this.recentBoke = recentBoke ?? [];
     }
 
-    async addBoke(boke: Boke, db: firebase.firestore.Firestore) {
+    async addBoke(boke: Boke) {
         this.recentBoke.unshift(boke);
         if (this.recentBoke.length > recentMaxLength) {
             this.recentBoke.pop();
         }
-        return await db.collection("users")
+        return await firebase.firestore().collection("users")
                 .withConverter(drawbokeConverter)
                 .doc(this.uid)
                 .set(this);
@@ -83,13 +83,12 @@ const drawbokeConverter: firebase.firestore.FirestoreDataConverter<DrawbokeUser>
 }
 
 export async function getFromAuthToStore(
-    db: firebase.firestore.Firestore,
     user: firebase.User | null) {
         console.log("getFromAuthToStore");
         if (!user) {
             return null;
         } else {
-            const query = await db.collection("users")
+            const query = await firebase.firestore().collection("users")
                 .where("twitterUid", "==", user.uid)
                 .withConverter(drawbokeConverter)
                 .get();
@@ -102,13 +101,13 @@ export async function getFromAuthToStore(
     }
 
 export async function addFromAuthToStore(
-    db: firebase.firestore.Firestore,
     auth: firebase.auth.UserCredential) {
     if (!auth.user) { 
         return null;
     } else {
-        
-        const userDocRef = db
+        const userDocRef = 
+            firebase
+            .firestore()
             .collection("users")
             .withConverter(drawbokeConverter)
             .where("twitterUid", "==", auth.user.uid);
@@ -124,14 +123,14 @@ export async function addFromAuthToStore(
             const userDisplayName = auth.user.displayName;
             let drawbokeUserDB = null;
             if (userDisplayName !== null) {
-                drawbokeUserDB = await db.collection("users")
+                drawbokeUserDB = await firebase.firestore().collection("users")
                     .withConverter(drawbokeConverter)
                     .add(new DrawbokeUser(
                         userDisplayName,
                         (userScreenName) ? userScreenName : userDisplayName,
                          auth.user.uid));
             } else if (userScreenName !== null && userScreenName !== undefined) {
-                drawbokeUserDB = await db.collection("users")
+                drawbokeUserDB = await firebase.firestore().collection("users")
                     .withConverter(drawbokeConverter)
                     .add(new DrawbokeUser(
                         userDisplayName ? userDisplayName : userScreenName,

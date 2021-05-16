@@ -1,5 +1,3 @@
-import firebase from "firebase/app"
-import "firebase/firestore"
 import {Box, Button, Center, Input, VStack} from "@chakra-ui/react"
 import {addBoke, isOkBokeTextLength} from "../util/db/boke"
 import {useState} from "react"
@@ -8,7 +6,6 @@ import {useHistory} from "react-router-dom"
 
 type BokeProps = {
     user: React.MutableRefObject<DrawbokeUser| null>,
-    db: firebase.firestore.Firestore
 }
 
 export function BokePage(props: BokeProps) {
@@ -25,7 +22,7 @@ export function BokePage(props: BokeProps) {
     function sendNewBoke() {
         if (props.user.current === null) { return }
         setSendingBoke(true)
-        addBoke(bokeText, props.user.current, props.db)
+        addBoke(bokeText, props.user.current)
             .then((boke) => { 
                 setSendingBoke(false) 
             })
