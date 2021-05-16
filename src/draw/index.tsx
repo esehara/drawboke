@@ -1,20 +1,20 @@
-import firebase from "firebase/app";
-import "firebase/firestore";
-import "firebase/storage";
-import { useState } from "react";
-import { YouAreArtistCanvas } from "./urartist";
-import { Button, Box, VStack, Heading } from "@chakra-ui/react";
-import { DrawbokeUser } from "../util/db/user";
+import firebase from "firebase/app"
+import "firebase/firestore"
+import "firebase/storage"
+import { useState } from "react"
+import { YouAreArtistCanvas } from "./urartist"
+import { Box, Button, Heading, VStack } from "@chakra-ui/react"
+import { DrawbokeUser } from "../util/db/user"
 
 function TitleForDrawerLabel() {
-    const [title, setTitle] = useState("友達がいるのによからぬことをする男");
+    const [title, setTitle] = useState("友達がいるのによからぬことをする男")
 
     function CreateNewLabel()  {
-        setTitle("（この絵にお題はありません）");
+        setTitle("（この絵にお題はありません）")
     }
 
     function SetRandomLabel() {
-        setTitle("違うお題がゲットされるっぽい");
+        setTitle("違うお題がゲットされるっぽい")
     }
 
     return (<Box>

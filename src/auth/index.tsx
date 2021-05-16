@@ -1,4 +1,4 @@
-import { Stack, Text, Flex, Center, Box } from "@chakra-ui/react"
+import { Box, Center, Flex, Stack, Text } from "@chakra-ui/react"
 
 export function LoginPage() {
     return (

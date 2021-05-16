@@ -1,11 +1,11 @@
 import {
     Link,
     useParams,
-} from "react-router-dom";
+} from "react-router-dom"
 
 type ShowDrawingPageParam = { id: string };
 export function ShowDrawingPage(props: any) {
-    let { id } = useParams<ShowDrawingPageParam>();
+    const { id } = useParams<ShowDrawingPageParam>()
 
     return (
         <div>
@@ -24,7 +24,7 @@ export function ShowDrawingPage(props: any) {
 
 type ShowCaptionPageParam = {id: string};
 export function ShowCaptionPage(props: any) {
-    let { id } = useParams<ShowCaptionPageParam>();
+    const { id } = useParams<ShowCaptionPageParam>()
     return (
         <div>
             <h1>id: {id} </h1>

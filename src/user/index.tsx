@@ -1,15 +1,15 @@
 import {
     Link,
     useParams
-} from "react-router-dom";
+} from "react-router-dom"
 import {
     Flex
-} from "@chakra-ui/react";
+} from "@chakra-ui/react"
 
 const testBokeList = [
     "濡れたティッシュを食べる男",
     "自分のiPadにいやらしいケモノの絵を描かれる男",
-];
+]
 
 function UserBokeForPictureList() {
     return (
@@ -18,8 +18,8 @@ function UserBokeForPictureList() {
             <ul>
                 {
                     testBokeList.map((prop, index) => {
-                        const title = prop;
-                        const boke_id = index.toString(); 
+                        const title = prop
+                        const boke_id = index.toString() 
                         return (
                             <li key={boke_id}>
                                 <Link to={"/show/boke/" + boke_id}>
@@ -36,7 +36,7 @@ function UserBokeForPictureList() {
 const testDrawingList = [
     "mock-love-thumbnail.png",
     "mock-love-thumbnail.png",
-];
+]
 
 function UserDrawingList() {
     return (
@@ -45,8 +45,8 @@ function UserDrawingList() {
             <ul>
                 {testDrawingList.map(
                     (prop, index) => {
-                        const draw_path = prop;
-                        const draw_id = index.toString();
+                        const draw_path = prop
+                        const draw_id = index.toString()
                         return (
                             <li key={index}>
                                 <Link to={"/show/draw/" + draw_id}>
@@ -58,17 +58,17 @@ function UserDrawingList() {
                 )}
             </ul>
         </div>
-    );
+    )
 }
 
 type UserPageParams = { id: string };
 export function UserPage() {
-    let { id }  = useParams<UserPageParams>();
+    const { id }  = useParams<UserPageParams>()
     return (
         <Flex>
             <h1>User: { id }</h1>
             <UserDrawingList />
             <UserBokeForPictureList />
         </Flex>
-    );
+    )
 }

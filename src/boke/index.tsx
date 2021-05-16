@@ -1,10 +1,10 @@
-import firebase from "firebase/app";
-import "firebase/firestore";
-import {VStack, Center, Input, Box, Button} from "@chakra-ui/react";
-import {isOkBokeTextLength, addBoke} from "../util/db/boke";
-import {useState} from "react";
-import {DrawbokeUser} from "../util/db/user";
-import {useHistory} from "react-router-dom";
+import firebase from "firebase/app"
+import "firebase/firestore"
+import {Box, Button, Center, Input, VStack} from "@chakra-ui/react"
+import {addBoke, isOkBokeTextLength} from "../util/db/boke"
+import {useState} from "react"
+import {DrawbokeUser} from "../util/db/user"
+import {useHistory} from "react-router-dom"
 
 type BokeProps = {
     user: React.MutableRefObject<DrawbokeUser| null>,
@@ -12,23 +12,23 @@ type BokeProps = {
 }
 
 export function BokePage(props: BokeProps) {
-    const history = useHistory();
+    const history = useHistory()
 
     if (props.user.current === null ) {
-        history.push("/");
-        return (<Box></Box>);
+        history.push("/")
+        return (<Box></Box>)
     }
 
-    const [bokeText, setBokeText] = useState("");
-    const [sendingBoke, setSendingBoke] = useState(false);
+    const [bokeText, setBokeText] = useState("")
+    const [sendingBoke, setSendingBoke] = useState(false)
 
     function sendNewBoke() {
-        if (props.user.current === null) { return };
-        setSendingBoke(true);
+        if (props.user.current === null) { return }
+        setSendingBoke(true)
         addBoke(bokeText, props.user.current, props.db)
             .then((boke) => { 
-                setSendingBoke(false); 
-            });
+                setSendingBoke(false) 
+            })
     }
 
     return (
@@ -52,5 +52,5 @@ export function BokePage(props: BokeProps) {
                     </Button>
                 </Box>
         </VStack>
-    </Center>);
+    </Center>)
 }

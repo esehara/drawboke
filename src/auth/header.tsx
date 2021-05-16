@@ -1,11 +1,11 @@
-import firebase from "firebase/app";
-import "firebase/auth";
-import { Link } from "react-router-dom";
-import { Edit, LogOut, MessageCircle } from "react-feather";
-import { Button, Flex, Box, Spacer, Center, VStack, Text } from "@chakra-ui/react";
-import { useHistory } from "react-router-dom";
-import { MutableRefObject } from "react";
-import { DrawbokeUser } from "../util/db/user";
+import firebase from "firebase/app"
+import "firebase/auth"
+import { Link , useHistory } from "react-router-dom"
+import { Edit, LogOut, MessageCircle } from "react-feather"
+import { Box, Button, Center, Flex, Spacer, Text, VStack } from "@chakra-ui/react"
+
+import { MutableRefObject } from "react"
+import { DrawbokeUser } from "../util/db/user"
 
 type HeaderButtonsProps = {
     RedirectForSignIn: () => void,
@@ -13,11 +13,11 @@ type HeaderButtonsProps = {
 }
 
 function HeaderButtons(props: HeaderButtonsProps) {
-    const history = useHistory();
+    const history = useHistory()
     
     const UserLogout = () => {
-        firebase.auth().signOut();
-        history.go(0);
+        firebase.auth().signOut()
+        history.go(0)
     }
 
     return(
@@ -45,7 +45,7 @@ function HeaderButtons(props: HeaderButtonsProps) {
                             </VStack>
                         </Center>
                     </Link>
-                    <Box onClick={() => { UserLogout(); }}>
+                    <Box onClick={() => { UserLogout() }}>
                         <Center mr={6} color="white"> 
                             <VStack>
                                 <Box>
@@ -62,7 +62,7 @@ function HeaderButtons(props: HeaderButtonsProps) {
             :   (
                 
                         <Button
-                            onClick={() => { props.RedirectForSignIn(); }}
+                            onClick={() => { props.RedirectForSignIn() }}
                         > PLAY </Button>
                 )
             
@@ -110,8 +110,8 @@ export function Header(props: HeaderProps) {
             <Spacer />
             <HeaderButtons 
                 user={props.user}
-                RedirectForSignIn={() => { return props.RedirectForSignIn(); }} />
+                RedirectForSignIn={() => { return props.RedirectForSignIn() }} />
         </Flex>
-    );
+    )
 }
 
