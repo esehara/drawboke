@@ -144,7 +144,7 @@ function MainPage(props: MainProps) {
 <Switch>
     <Route exact path="/"> <LoginPage /> </Route>
     <Route path="/draw/:id">
-        <DrawingPage user={props.user} db={props.db} storage={props.storage} /> 
+        <DrawingPage user={props.user} /> 
     </Route>
     <Route path="/boke/:id"><BokePage user={props.user} /> </Route>
     <Route path="/show/draw/:id">

@@ -34,8 +34,6 @@ function TitleForDrawerLabel() {
 }
 type DrawingProps = {
     user: React.MutableRefObject<DrawbokeUser | null>,
-    storage: firebase.storage.Storage,
-    db: firebase.firestore.Firestore,
 }
 
 export function DrawingPage(props: DrawingProps) {
@@ -46,7 +44,7 @@ export function DrawingPage(props: DrawingProps) {
                     <TitleForDrawerLabel />
                 </Box>
                 <Box>
-                    <YouAreArtistCanvas user={props.user} storage={props.storage} db={props.db} />
+                    <YouAreArtistCanvas user={props.user} />
                 </Box>
             </VStack>
         </Box>    

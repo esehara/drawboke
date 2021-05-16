@@ -9,10 +9,6 @@ import { uploadImage } from "../util/db/draw"
 import Konva from "konva"
 import { DrawbokeUser } from "../util/db/user"
 
-import firebase from "firebase/app"
-import "firebase/firestore"
-import "firebase/storage"
-
 function PenSize(props: any) {
   const { getInputProps, getCheckboxProps } = useRadio(props)
   const input = getInputProps()
@@ -313,8 +309,6 @@ function LayerController(props: LayerProps) {
 
 type ArtistProps = {
   user: React.MutableRefObject<DrawbokeUser | null>,
-  storage: firebase.storage.Storage,
-  db: firebase.firestore.Firestore,
 }
 
 export function YouAreArtistCanvas(props: ArtistProps) {
@@ -367,9 +361,7 @@ export function YouAreArtistCanvas(props: ArtistProps) {
 
       uploadImage(
         canvasRef.current.toDataURL(),
-        props.user.current,
-        props.storage,
-        props.db)
+        props.user.current)
     }
 
     return (
